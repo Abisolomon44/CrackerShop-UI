@@ -1,0 +1,69 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #033d49, #065c6c); /* Primary gradient background */
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* White card */
+.login-card {
+  background-color: #ffffff;   /* white background */
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+/* Title */
+.login-title {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Input fields */
+form input {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+form input:focus {
+  border-color: #033d49;
+  box-shadow: 0 0 6px rgba(3,61,73,0.4);
+}
+
+/* Login button */
+form button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+form button:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.9);
+}
+.error {
+  color: red;
+  font-size: 13px;
+  margin-top: 4px;
+}
+.form-group {
+  margin-bottom: 15px;
+}

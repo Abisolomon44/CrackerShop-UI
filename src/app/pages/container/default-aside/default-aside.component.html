@@ -1,0 +1,40 @@
+<nav class="sidebar d-flex flex-column vh-100 p-3 text-white" [ngStyle]="{'background-color': colors.primaryDark}">
+
+
+  <ul class="nav nav-pills flex-column mb-auto">
+    <ng-container *ngFor="let item of navItems">
+      <!-- Single link (no children) -->
+      <li *ngIf="!item.children" class="nav-item">
+        <a [routerLink]="item.route" routerLinkActive="active" class="nav-link text-white">
+          <i *ngIf="item.icon" class="{{item.icon}} me-2"></i>
+          {{ item.label }}
+        </a>
+      </li>
+
+      <!-- Parent with children (Master) -->
+      <li *ngIf="item.children" class="nav-item">
+        <a class="nav-link text-white d-flex justify-content-between align-items-center" 
+           (click)="item.expanded = !item.expanded" style="cursor:pointer">
+          <span>
+            <i *ngIf="item.icon" class="{{item.icon}} me-2"></i>
+            {{ item.label }}
+          </span>
+          <span>
+            <i class="bi" [ngClass]="{'bi-chevron-down': !item.expanded, 'bi-chevron-up': item.expanded}"></i>
+          </span>
+        </a>
+
+        <ul class="nav flex-column ms-3 mt-1" *ngIf="item.expanded">
+          <li *ngFor="let child of item.children" class="nav-item">
+            <a [routerLink]="child.route" routerLinkActive="active" class="nav-link text-white">
+              <i *ngIf="child.icon" class="{{child.icon}} me-2"></i>
+              {{ child.label }}
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ng-container>
+  </ul>
+
+  <hr>
+</nav>

@@ -1,0 +1,56 @@
+<div class="master-container">
+  <div class="card master-card p-4">
+    <h2>Role Master</h2>
+
+    <!-- Form -->
+    <form (ngSubmit)="saveOrUpdateRole()" class="mb-4">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Role Code</label>
+          <input type="text" [(ngModel)]="role.roleCode" name="roleCode" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Role Name</label>
+          <input type="text" [(ngModel)]="role.roleName" name="roleName" class="form-control" required>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <button type="submit" class="btn btn-primary me-2">
+            {{ role.roleID > 0 ? 'Update' : 'Save' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Table -->
+    <table class="table table-bordered table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Role Code</th>
+          <th>Role Name</th>
+          <th>Status</th>
+          <th class="text-center" style="width:150px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of roles">
+          <td>{{ r.roleCode }}</td>
+          <td>{{ r.roleName }}</td>
+          <td>
+            <span class="badge" [class.bg-success]="r.isActive" [class.bg-danger]="!r.isActive">
+              {{ r.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-outline-warning" (click)="editRole(r)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-outline-danger" (click)="deleteRole(r)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

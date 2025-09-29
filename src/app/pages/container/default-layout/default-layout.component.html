@@ -1,0 +1,18 @@
+<div class="layout-container d-flex flex-column vh-100">
+  <!-- Header -->
+  <app-default-header></app-default-header>
+
+  <div class="layout-main d-flex flex-grow-1">
+    <!-- Sidebar -->
+    <app-default-aside></app-default-aside>
+
+    <!-- Main content area -->
+    <div class="layout-content flex-grow-1 p-4 bg-light">
+      <!-- Routed components will load here -->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <app-default-footer></app-default-footer>
+</div>

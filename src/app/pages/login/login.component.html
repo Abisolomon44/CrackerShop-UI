@@ -1,0 +1,29 @@
+<div class="login-card">
+  <h2 class="login-title" [style.color]="colors.primary">Login</h2>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <!-- Username -->
+    <div class="form-group">
+      <input type="text" formControlName="username" placeholder="Username">
+      <div class="error" *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid">
+        Username is required
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <input type="password" formControlName="password" placeholder="Password">
+      <div class="error" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+        Password is required
+      </div>
+    </div>
+
+    <!-- Error message -->
+    <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <!-- Login button -->
+    <button type="submit" [style.backgroundColor]="colors.primary" [style.color]="colors.textLight">
+      Login
+    </button>
+  </form>
+</div>
