@@ -15,3 +15,25 @@ export interface User {
   updatedSystemName: string;
   updatedAt: Date;
 }
+export interface UserPermission {
+  id: number;
+  userID?: number;
+  roleID: number;
+  permissionName: string;
+  route: string;
+  canView: boolean;
+  canAdd: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+
+export interface Module {
+  moduleID: number;
+  label: string;
+  route: string;
+  icon: string | null;
+  isActive: boolean;
+}

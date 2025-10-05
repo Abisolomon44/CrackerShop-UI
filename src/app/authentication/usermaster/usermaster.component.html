@@ -14,6 +14,12 @@
           </div>
 
           <div class="form-column mb-3">
+  <label>Password</label>
+  <input type="text" [(ngModel)]="user.passwordHash" name="passwordHash" class="form-control" 
+         [required]="user.userID === 0">
+</div>
+
+          <div class="form-column mb-3">
             <label>Email</label>
             <input type="email" [(ngModel)]="user.email" name="email" class="form-control" required>
           </div>

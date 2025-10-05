@@ -27,11 +27,15 @@ body {
   color: var(--color-text-dark);
 }
 
-/* ===== Layout ===== */
+/* ===== Layout Borders & Shadows ===== */
 .layout-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  border: 1px solid #ddd;       /* subtle outer border */
+  border-radius: 12px;          /* rounded corners */
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05); /* soft shadow */
 }
 
 .layout-main {
@@ -39,15 +43,21 @@ body {
   flex: 1;
   min-height: 0;
   overflow: hidden;
+  border-top: 1px solid #eee;   /* separates header */
+  border-bottom: 1px solid #eee; /* separates footer */
 }
 
 .layout-content {
   flex: 1;
   padding: 20px;
-  background-color: var(--color-bg-white);
+  background-color: #ffffff;    /* white content area */
+  border-left: 1px solid #eee;  /* separates sidebar */
+  border-radius: 0 0 12px 12px; /* round only bottom corners */
+  box-shadow: inset 0 0 0 1px #f0f0f0; /* inner subtle border */
   overflow-y: auto;
   min-height: 0;
 }
+
 
 /* ===== Header ===== */
 .header {

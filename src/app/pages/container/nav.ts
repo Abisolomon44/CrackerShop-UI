@@ -17,6 +17,13 @@ export const NAV_ITEMS: NavItem[] = [
       { label: 'User', route: '/default/master/user' }
 
     ]
+  },
+   {
+    label: 'Access Control',
+    children: [
+      { label: 'User Roles & Permissions', route: '/user/master/accesscontrol' },
+  
+    ]
   }
 ];
 
