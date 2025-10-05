@@ -55,7 +55,7 @@ export class RoleMasterComponent {
   }
 
   saveOrUpdateRole() {
-    if (!this.role.roleName || !this.role.roleCode) {
+    if (!this.role.roleName ) {
       alert("Role Name and Code are required!");
       return;
     }

@@ -90,7 +90,7 @@ export class UsermasterComponent {
   }
 
   saveOrUpdateUser() {
-    if (!this.user.userName || !this.user.email) {
+    if (!this.user.userName ) {
       alert("User Name and Email are required!");
       return;
     }
