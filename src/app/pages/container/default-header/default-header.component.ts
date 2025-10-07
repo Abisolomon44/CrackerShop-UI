@@ -12,12 +12,11 @@ export class DefaultHeaderComponent {
 
  colors = Colors;
   constructor(private router: Router) {}
-   logout() {
-    // Optional: Clear session/local storage if you store login info
-    localStorage.removeItem('userToken');  // Example
-    localStorage.removeItem('userName');
+logout() {
+  localStorage.removeItem('userId');
+  localStorage.removeItem('userName');
 
-    // Navigate to login page
-    this.router.navigate(['/login']);
-  }
+  this.router.navigate(['/login']);
+}
+
 }

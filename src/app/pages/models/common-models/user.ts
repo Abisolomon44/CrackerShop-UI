@@ -18,13 +18,8 @@ export interface User {
 export interface UserPermission {
   id: number;
   userID?: number;
-  roleID: number;
+  moduleID: string;
   permissionName: string;
-  route: string;
-  canView: boolean;
-  canAdd: boolean;
-  canEdit: boolean;
-  canDelete: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -32,8 +27,10 @@ export interface UserPermission {
 
 export interface Module {
   moduleID: number;
-  label: string;
-  route: string;
+  label: string;                 // required now
+  route: string | null;          // allow null
   icon: string | null;
   isActive: boolean;
+  parentID: number | null;
+  children: Module[];
 }

@@ -8,10 +8,10 @@ import { userInfo } from 'node:os';
 import { CommonserviceService } from '../../services/commonservice.service';
 @Component({
   selector: 'app-login',
-  standalone: true,   // ✅ important for Angular 19
+  standalone: true, 
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [CommonModule, ReactiveFormsModule]  // ✅ use ReactiveFormsModule
+  imports: [CommonModule, ReactiveFormsModule]  
 })
 export class LoginComponent {
     colors = Colors;
@@ -41,21 +41,38 @@ export class LoginComponent {
       }
     });
   }
+onSubmit() {
+  if (this.loginForm.valid) {
+    const { username, password } = this.loginForm.value;
 
-  onSubmit() {
-    if (this.loginForm.valid) {
-      const { username, password } = this.loginForm.value;
-
-      const matchedUser = this.users.find(u => u.userName === username && u.passwordHash === password);
-
-      if (matchedUser) {
-        alert(`Login successful  Welcome ${matchedUser.userName}`);
-        this.router.navigate(['/default']);
-      } else {
-        this.errorMessage = 'Invalid username or password ❌';
-      }
-    } else {
-      this.errorMessage = 'Please fill in all fields ⚠️';
+    // ✅ Hardcoded developer/admin login
+    if (username === 'admin' && password === '123') {
+      localStorage.setItem('userId', '0'); // or any dummy ID
+      localStorage.setItem('userName', 'admin');
+      localStorage.setItem('role', 'admin');
+      alert(`Login successful 🎉 Welcome admin`);
+      this.router.navigate(['/default']);
+      return; // exit function
     }
+
+    // Normal database login
+    const matchedUser = this.users.find(
+      u => u.userName === username && u.passwordHash === password
+    );
+
+    if (matchedUser) {
+      localStorage.setItem('userId', matchedUser.userID.toString());
+      localStorage.setItem('userName', matchedUser.userName);
+      localStorage.setItem('role', 'client'); 
+      alert(`Login successful 🎉 Welcome ${matchedUser.userName}`);
+      this.router.navigate(['/default']);
+    } else {
+      this.errorMessage = 'Invalid username or password';
+    }
+  } else {
+    this.errorMessage = 'Please fill in all fields';
   }
+}
+
+
 }

@@ -16,105 +16,126 @@ export class AuthenticationComponent {
   users: User[] = [];
   permissions: UserPermission[] = [];
   modules: Module[] = [];
-  selectedModules: { [key: number]: UserPermission } = {}; // key = moduleID
-  selectedModuleID: number | null = null; // for ngModel
+
+  // Track selected modules separately
+  selectedModulesMap: { [moduleID: number]: boolean } = {};
+  permissionNameMap: { [moduleID: number]: string } = {};
+
   selectedRoleId: number | undefined;
   selectedUserId: number | undefined;
-
-  permissionName = ''; // e.g., "Company"
-  route = ''; // e.g., "/default/master/company"
 
   constructor(private service: CommonserviceService) {}
 
   ngOnInit(): void {
     this.loadRoles();
     this.loadUsers();
-     this.loadModules();
+    this.loadModules();
   }
 
   loadRoles() {
-    this.service.getRoles().subscribe((res) => (this.roles = res));
+    this.service.getRoles().subscribe(res => (this.roles = res));
   }
 
   loadUsers() {
-    this.service.getUsers().subscribe((res) => (this.users = res));
+    this.service.getUsers().subscribe(res => (this.users = res));
   }
 
   loadPermissionsForRole() {
     if (!this.selectedRoleId) return;
-    this.service
-      .getPermissionsByRole(this.selectedRoleId)
-      .subscribe((res) => (this.permissions = res));
+    this.service.getPermissionsByRole(this.selectedRoleId).subscribe(res => {
+      this.permissions = res;
+      this.markSelectedModules();
+    });
   }
 
   loadPermissionsForUser() {
     if (!this.selectedUserId) return;
-    this.service
-      .getPermissionsByUser(this.selectedUserId)
-      .subscribe((res) => (this.permissions = res));
+    this.service.getPermissionsByUser(this.selectedUserId).subscribe(res => {
+      this.permissions = res;
+      this.markSelectedModules();
+    });
   }
 
+  loadModules() {
+    this.service.getAllModules().subscribe(
+      res => {
+        this.modules = res;
+        // Initialize maps
+        res.forEach(m => {
+          if (!(m.moduleID in this.selectedModulesMap)) this.selectedModulesMap[m.moduleID] = false;
+          if (!(m.moduleID in this.permissionNameMap)) this.permissionNameMap[m.moduleID] = '';
+        });
+        this.markSelectedModules();
+      },
+      err => console.error('Failed to load modules', err)
+    );
+  }
+
+  // Mark checkboxes based on existing permissions
+private markSelectedModules() {
+  if (!this.permissions.length) return;
+  this.modules.forEach(m => {
+    const permission = this.permissions.find(p => +p.moduleID === m.moduleID);
+    this.selectedModulesMap[m.moduleID] = !!permission;
+    this.permissionNameMap[m.moduleID] = permission?.permissionName || '';
+  });
+}
+
+
   savePermission(permission: UserPermission) {
-    this.service.savePermission(permission).subscribe((res) => {
-      alert('Permission saved successfully.');
-      if (this.selectedUserId) this.loadPermissionsForUser();
-      else if (this.selectedRoleId) this.loadPermissionsForRole();
+    if (!permission.permissionName || !permission.moduleID) {
+      alert('Permission Name is required for each module.');
+      return;
+    }
+    this.service.savePermission(permission).subscribe(() => {
+      // Optional: toast or alert
     });
   }
 
   deletePermission(id: number) {
     if (!confirm('Are you sure to delete this permission?')) return;
     this.service.deletePermission(id).subscribe(() => {
-      alert('Permission deleted successfully.');
       if (this.selectedUserId) this.loadPermissionsForUser();
       else if (this.selectedRoleId) this.loadPermissionsForRole();
     });
   }
 
-  loadModules() {
-    this.service.getAllModules().subscribe(
-      (res) => (this.modules = res),
-      (err) => console.error('Failed to load modules', err)
-    );
+  saveAllSelectedModules() {
+  if (!this.selectedUserId && !this.selectedRoleId) {
+    alert('Please select a user or role first.');
+    return;
   }
 
-  initializeModuleSelections() {
-    // For each module, create a UserPermission object placeholder
-    this.modules.forEach((mod) => {
-      this.selectedModules[mod.moduleID] = {
-        id: 0,
-        userID: this.selectedUserId || 0,
-        roleID: this.selectedRoleId || 0,
-        permissionName: mod.label,
-        route: mod.route,
-        canView: false,
-        canAdd: false,
-        canEdit: false,
-        canDelete: false,
-      };
-    });
+  // Collect selected module IDs
+  const selectedModuleIDs = Object.keys(this.selectedModulesMap)
+    .filter(id => this.selectedModulesMap[+id])
+    .map(id => +id);
+
+  if (!selectedModuleIDs.length) {
+    alert('Please select at least one module.');
+    return;
   }
 
-  toggleModulePermission(mod: Module) {
-    const perm = this.selectedModules[mod.moduleID];
-    if (perm) {
-      this.savePermission(perm);
-    }
-  }
-  onModuleChange() {
-  if (this.selectedModuleID) {
-    const selectedModule = this.modules.find(
-      (m) => m.moduleID === this.selectedModuleID
-    );
-    if (selectedModule) {
-      this.permissionName = selectedModule.label;
-      this.route = selectedModule.route;
-    }
-  } else {
-    // Clear fields if no module selected
-    this.permissionName = '';
-    this.route = '';
-  }
+  // Prepare payload
+  const permission: UserPermission = {
+    id: 0, // new record
+    userID: this.selectedUserId || 0,
+    moduleID: selectedModuleIDs.join(','), // comma-separated IDs
+    permissionName: 'DefaultPermission', // optional if needed
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  // Single API call
+  this.savePermission(permission);
+
+  alert('Selected modules saved successfully.');
+  if (this.selectedUserId) this.loadPermissionsForUser();
+  else if (this.selectedRoleId) this.loadPermissionsForRole();
 }
 
+  // Check if any module is selected
+  hasSelectedModules(): boolean {
+    return Object.values(this.selectedModulesMap).some(v => v);
+  }
 }

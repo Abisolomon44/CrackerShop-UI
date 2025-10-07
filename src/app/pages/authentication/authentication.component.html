@@ -1,103 +1,63 @@
-<div class="container mt-4">
-  <div class="form-container p-4">
-    <!-- Page Title -->
-    <h2 class="mb-4 text-primary fw-bold text-center">
-      <i class="bi bi-shield-lock me-2"></i> User Role & Permission Mapping
-    </h2>
+<div class="layout-content p-4">
 
-    <!-- Role & User Selection -->
-    <div class="row g-3 mb-4">
-<div class="form-column mb-3">
-        <label class="form-label fw-semibold">Role</label>
-        <select class="form-select" [(ngModel)]="selectedRoleId" (change)="loadPermissionsForRole()">
-          <option [value]="null">-- Select Role --</option>
-          <option *ngFor="let role of roles" [value]="role.roleID">{{ role.roleName }}</option>
-        </select>
-      </div>
-<div class="form-column mb-3">
-        <label class="form-label fw-semibold">User</label>
-        <select class="form-select" [(ngModel)]="selectedUserId" (change)="loadPermissionsForUser()">
-          <option [value]="null">-- Select User --</option>
-          <option *ngFor="let user of users" [value]="user.userID">{{ user.userName }}</option>
-        </select>
-      </div>
-    </div>
-<div class="form-column mb-3">
-  <label for="moduleSelect">Select Module:</label>
-  <select
-    id="moduleSelect"
-    class="form-select"
-    [(ngModel)]="selectedModuleID"
-    (change)="onModuleChange()"
-  >
-    <option [ngValue]="null">-- Select Module --</option>
-    <option *ngFor="let module of modules" [ngValue]="module.moduleID">
-      {{ module.label }}
-    </option>
-  </select>
-</div>
+  <h2 class="mb-4 text-primary text-center">User / Role Modules</h2>
 
-
-
-    <!-- Add New Permission -->
-    <div class="row g-3 mb-4 align-items-end">
-      <div class="form-column mb-3">
-        <label class="form-label fw-semibold">Permission Name</label>
-        <input type="text" class="form-control" placeholder="Permission Name" [(ngModel)]="permissionName">
-      </div>
-      <div class="form-column mb-3">
-        <label class="form-label fw-semibold">Route</label>
-        <input type="text" class="form-control" placeholder="Route" [(ngModel)]="route">
-      </div>
-      <div class="col-md-4 d-grid">
-        <button class="btn btn-primary"
-          (click)="savePermission({id:0, userID: selectedUserId, roleID: selectedRoleId!, permissionName: permissionName, route: route, canView:false, canAdd:false, canEdit:false, canDelete:false})">
-          <i class="bi bi-plus-circle me-1"></i> Add Permission
-        </button>
-      </div>
+  <!-- Role & User Selection -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Select Role</label>
+      <select
+        class="form-select"
+        [(ngModel)]="selectedRoleId"
+      >
+        <option [ngValue]="undefined">-- Select Role --</option>
+        <option *ngFor="let role of roles" [value]="role.roleID">{{ role.roleName }}</option>
+      </select>
     </div>
 
-    <!-- Permission Table -->
-    <div class="table-responsive">
-      <table class="table-common align-middle">
-        <thead>
-          <tr>
-            <th>Permission Name</th>
-            <th>Route</th>
-            <th class="text-center">View</th>
-            <th class="text-center">Add</th>
-            <th class="text-center">Edit</th>
-            <th class="text-center">Delete</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let perm of permissions">
-            <td>{{ perm.permissionName }}</td>
-            <td>{{ perm.route }}</td>
-            <td class="text-center">
-              <input type="checkbox" [(ngModel)]="perm.canView" (change)="savePermission(perm)">
-            </td>
-            <td class="text-center">
-              <input type="checkbox" [(ngModel)]="perm.canAdd" (change)="savePermission(perm)">
-            </td>
-            <td class="text-center">
-              <input type="checkbox" [(ngModel)]="perm.canEdit" (change)="savePermission(perm)">
-            </td>
-            <td class="text-center">
-              <input type="checkbox" [(ngModel)]="perm.canDelete" (change)="savePermission(perm)">
-            </td>
-            <td class="text-center">
-              <button class="btn btn-sm btn-outline-danger" (click)="deletePermission(perm.id)" title="Delete">
-                <i class="bi bi-trash-fill"></i>
-              </button>
-            </td>
-          </tr>
-          <tr *ngIf="permissions.length === 0">
-            <td colspan="7" class="text-center text-muted">No permissions found.</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Select User</label>
+      <select
+        class="form-select"
+        [(ngModel)]="selectedUserId"
+      >
+        <option [ngValue]="undefined">-- Select User --</option>
+        <option *ngFor="let user of users" [value]="user.userID">{{ user.userName }}</option>
+      </select>
     </div>
   </div>
+
+  <!-- Module List with Checkboxes -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-light fw-semibold">Modules</div>
+    <ul class="list-group list-group-flush">
+      <li
+        *ngFor="let module of modules"
+        class="list-group-item d-flex align-items-center justify-content-between"
+      >
+        <div class="form-check d-flex align-items-center gap-2">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            [(ngModel)]="selectedModulesMap[module.moduleID]"
+            id="moduleCheck{{ module.moduleID }}"
+          />
+          <label class="form-check-label" for="moduleCheck{{ module.moduleID }}">
+            {{ module.label }}
+          </label>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Save All Button -->
+  <div class="d-flex justify-content-end mt-3">
+    <button
+      class="btn btn-primary"
+      (click)="saveAllSelectedModules()"
+    >
+      Save Selected Modules
+    </button>
+  </div>
+
 </div>
