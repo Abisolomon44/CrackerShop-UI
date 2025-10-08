@@ -46,14 +46,15 @@ onSubmit() {
     const { username, password } = this.loginForm.value;
 
     // ✅ Hardcoded developer/admin login
-    if (username === 'admin' && password === '123') {
-      localStorage.setItem('userId', '0'); // or any dummy ID
-      localStorage.setItem('userName', 'admin');
-      localStorage.setItem('role', 'admin');
-      alert(`Login successful 🎉 Welcome admin`);
-      this.router.navigate(['/default']);
-      return; // exit function
-    }
+// ✅ Hardcoded developer/admin login
+if (username === 'admin' && password === '123') {
+  localStorage.setItem('userId', '0'); // dummy ID
+  localStorage.setItem('userName', 'admin');
+  localStorage.setItem('role', 'admin');   // 👈 important
+  alert(`Login successful 🎉 Welcome admin`);
+  this.router.navigate(['/default']);
+  return;
+}
 
     // Normal database login
     const matchedUser = this.users.find(

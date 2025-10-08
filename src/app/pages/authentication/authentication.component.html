@@ -1,63 +1,87 @@
-<div class="layout-content p-4">
+<div class="layout-content container py-4">
 
-  <h2 class="mb-4 text-primary text-center">User / Role Modules</h2>
+  <!-- Page Title -->
+  <div class="text-center mb-5">
+    <h2 class="fw-bold text-primary">User / Role Module Configuration</h2>
+    <p class="text-muted">Assign modules to roles or specific users</p>
+  </div>
+ <div class="form-column mb-3">
 
   <!-- Role & User Selection -->
-  <div class="row g-3 mb-4">
-    <div class="col-md-6">
-      <label class="form-label fw-semibold">Select Role</label>
-      <select
-        class="form-select"
-        [(ngModel)]="selectedRoleId"
-      >
-        <option [ngValue]="undefined">-- Select Role --</option>
-        <option *ngFor="let role of roles" [value]="role.roleID">{{ role.roleName }}</option>
-      </select>
-    </div>
+  <div class="card form-container shadow-sm mb-4 border-0">
+    <div class="card-body row g-4">
+      <!-- Role -->
+       
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Select Role</label>
+        <select
+          class="form-select"
+          [(ngModel)]="selectedRoleId"
+        >
+          <option [ngValue]="undefined">-- Select Role --</option>
+          <option *ngFor="let role of roles" [value]="role.roleID">
+            {{ role.roleName }}
+          </option>
+        </select>
+      </div>
 
-    <div class="col-md-6">
-      <label class="form-label fw-semibold">Select User</label>
-      <select
-        class="form-select"
-        [(ngModel)]="selectedUserId"
-      >
-        <option [ngValue]="undefined">-- Select User --</option>
-        <option *ngFor="let user of users" [value]="user.userID">{{ user.userName }}</option>
-      </select>
+      <!-- User -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Select User</label>
+        <select
+          class="form-select"
+          [(ngModel)]="selectedUserId"
+        >
+          <option [ngValue]="undefined">-- Select User --</option>
+          <option *ngFor="let user of users" [value]="user.userID">
+            {{ user.userName }}
+          </option>
+        </select>
+      </div>
     </div>
   </div>
 
-  <!-- Module List with Checkboxes -->
-  <div class="card shadow-sm">
-    <div class="card-header bg-light fw-semibold">Modules</div>
-    <ul class="list-group list-group-flush">
-      <li
-        *ngFor="let module of modules"
-        class="list-group-item d-flex align-items-center justify-content-between"
-      >
-        <div class="form-check d-flex align-items-center gap-2">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            [(ngModel)]="selectedModulesMap[module.moduleID]"
-            id="moduleCheck{{ module.moduleID }}"
-          />
-          <label class="form-check-label" for="moduleCheck{{ module.moduleID }}">
-            {{ module.label }}
-          </label>
-        </div>
-      </li>
-    </ul>
+  <!-- Module List -->
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white fw-semibold">
+      Available Modules
+    </div>
+    <div class="card-body p-0">
+      <ul class="list-group list-group-flush">
+        <li
+          *ngFor="let module of modules; let i = index"
+          class="list-group-item d-flex align-items-center justify-content-between"
+        >
+          <!-- Checkbox + Label -->
+          <div class="form-check d-flex align-items-center gap-2">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [(ngModel)]="selectedModulesMap[module.moduleID]"
+              id="moduleCheck{{ module.moduleID }}"
+            />
+            <label class="form-check-label fw-medium" for="moduleCheck{{ module.moduleID }}">
+              {{ i+1 }}. {{ module.label }}
+            </label>
+          </div>
+
+          <!-- Badge -->
+          <span class="badge bg-light text-dark px-3 py-2 rounded-pill shadow-sm">
+          </span>
+        </li>
+      </ul>
+    </div>
   </div>
+ </div>
+
 
   <!-- Save All Button -->
-  <div class="d-flex justify-content-end mt-3">
+  <div class="d-flex justify-content-end mt-4">
     <button
-      class="btn btn-primary"
+      class="btn btn-primary px-4 shadow-sm"
       (click)="saveAllSelectedModules()"
     >
-      Save Selected Modules
+      <i class="bi bi-save me-2"></i> Save Selected Modules
     </button>
   </div>
-
 </div>
