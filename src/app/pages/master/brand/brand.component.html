@@ -1,1 +1,150 @@
-<p>brand works!</p>
+<div class="container mt-5">
+  <div class="row g-4">
+
+    <!-- Brand Form -->
+    <div class="col-lg-4 col-md-5">
+      <div class="form-container p-4">
+        <h2>Brand Master</h2>
+
+        <form #brandForm="ngForm" (ngSubmit)="saveOrUpdateBrand()">
+
+          <!-- Brand Name -->
+          <div class="form-column mb-3">
+            <label for="brandName" class="required">Brand Name</label>
+            <input
+              type="text"
+              id="brandName"
+              class="form-control"
+              [(ngModel)]="brand.brandName"
+              name="brandName"
+              required
+              [appAutoFocus]="true"
+              [autoSelect]="true"
+              #brandName="ngModel"
+              (ngModelChange)="checkDuplicate()"
+              appFocusOnKey="description"
+              [autoSelectNext]="true"
+              [ngClass]="{
+                'is-invalid': brandName.invalid && brandName.touched,
+                'is-warning': duplicateError
+              }"
+            />
+            <div class="text-danger" *ngIf="brandName.invalid && brandName.touched">
+              Brand Name is required.
+            </div>
+            <div class="text-warning small mt-1" *ngIf="duplicateError">
+              This brand already exists!
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-column mb-3">
+            <label for="description">Description</label>
+            <textarea
+              id="description"
+              class="form-control"
+              [(ngModel)]="brand.description"
+              name="description"
+              rows="3"
+              appFocusOnKey="isActive"
+              [autoSelectNext]="true"
+            ></textarea>
+          </div>
+
+          <!-- Active Toggle -->
+          <div class="form-check form-switch mb-3">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="isActive"
+              [(ngModel)]="brand.isActive"
+              name="isActive"
+              appFocusOnKey="saveBtn"
+            />
+            <label class="form-check-label" for="isActive">
+              {{ brand.isActive ? 'Active' : 'Inactive' }}
+            </label>
+          </div>
+
+          <!-- Buttons -->
+          <div class="form-actions d-flex gap-2">
+            <button
+              type="submit"
+              id="saveBtn"
+              class="btn btn-primary flex-fill"
+              [disabled]="brandForm.invalid || duplicateError"
+            >
+              <i class="bi bi-save me-1"></i>
+              {{ brand.brandID ? 'Update' : 'Save' }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline flex-fill"
+              (click)="resetBrand()"
+            >
+              <i class="bi bi-arrow-clockwise me-1"></i> Reset
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- Brand Table -->
+    <div class="col-lg-8 col-md-7">
+      <div class="form-container p-4">
+        <h5>Brand List</h5>
+        <div class="table-responsive">
+          <table class="table-common">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Brand Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let b of brands; let i = index"
+                [class.table-warning]="brand.brandID === b.brandID"
+              >
+                <td>{{ i + 1 }}</td>
+                <td>{{ b.brandName }}</td>
+                <td>{{ b.description }}</td>
+                <td>
+                  <span class="badge" [ngClass]="b.isActive ? 'bg-success' : 'bg-danger'">
+                    {{ b.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button
+                    class="btn btn-sm"
+                    title="Edit"
+                    (click)="editBrand(b)"
+                  >
+                    <i class="bi bi-pencil-fill"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm"
+                    title="Delete"
+                    (click)="deleteBrand(b)"
+                  >
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="brands.length === 0">
+                <td colspan="5" class="text-center text-muted">
+                  No brands found.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

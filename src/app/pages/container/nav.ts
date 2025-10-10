@@ -25,6 +25,30 @@ export const NAV_ITEMS: NavItem[] = [
       { label: 'User Roles & Permissions', route: '/user/master/accesscontrol' },
   
     ]
-  }
+  },
+
+{
+  label: 'CommonProduct',
+  children: [
+    { label: 'Brand', route: '/CommonProduct/brand' },
+    { label: 'Category', route: '/CommonProduct/category' },
+    { label: 'Customer Master', route: '/CommonProduct/customer' },
+    { label: 'HSN Code', route: '/CommonProduct/hsnCode' },
+    { label: 'Product  Master', route: '/CommonProduct/Product' },
+    { label: 'Service Master', route: '/CommonProduct/ServiceMaster' },
+    { label: 'Sub Category', route: '/CommonProduct/subCategory' },
+    { label: 'Supplier', route: '/CommonProduct/supplier' },
+    { label: 'Tax Master', route: '/CommonProduct/taxmaster' },
+    { label: 'Unit', route: '/CommonProduct/unit' }
+  ]
+}
+
+
+
+
+
+
+
+
 ];
 

@@ -21,7 +21,7 @@ export class DefaultAsideComponent {
   constructor(private commonService: CommonserviceService) {}
 ngOnInit() {
   if (typeof window === 'undefined' || !window.localStorage) {
-    console.warn('⚠️ localStorage not available (SSR or Node context)');
+    console.warn(' localStorage not available (SSR or Node context)');
     return;
   }
 
