@@ -78,4 +78,19 @@ export class CommonserviceService {
     return this.http.get<Module[]>(`${this.baseUrl}/GetAllModules`);
   }
 
+
+    getCurrentUserId(): number {
+    const userId = localStorage.getItem('userId');
+    return userId ? Number(userId) : 0;
+  }
+
+  /** Get the current logged-in user role */
+  getCurrentUserRole(): string {
+    return localStorage.getItem('role') || '';
+  }
+
+  /** Optional: check if user is admin */
+  isAdmin(): boolean {
+    return this.getCurrentUserRole().toLowerCase() === 'admin';
+  }
 }

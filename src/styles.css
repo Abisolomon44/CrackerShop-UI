@@ -258,53 +258,103 @@ button.btn-primary:hover,
   margin-top: 5px;
 }
 
-/* ===== Common Table ===== */
-.table-common,
-table {
+
+
+.table-container {
+  max-height: 400px;        /* You can adjust height (e.g., 300px / 500px) */
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Base table */
+.table-common {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  min-width: 700px;
   font-size: 0.95rem;
-  margin-top: 25px;
 }
 
-.table-common th,
-.table-common td,
-table th,
-table td {
-  padding: 12px 15px;
-  border: 1px solid var(--color-border);
-  vertical-align: middle;
-}
-
-.table-common th,
-table th {
-  background-color: var(--color-primary);
-  color: var(--color-text-light);
+/* Make header sticky */
+.table-common thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: var(--color-primary, #007bff);
+  color: var(--color-text-light, #fff);
   font-weight: 600;
 }
+/* Scrollable table container (remove fixed height) */
+.table-container {
+  width: 100%;
+  overflow-x: auto; /* horizontal scroll if table too wide */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
 
-.table-common tr:nth-child(even),
-table tr:nth-child(even) {
+/* Table styles (normal flow, no display:block) */
+.table-common {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.95rem;
+  table-layout: auto; /* let columns adjust */
+}
+
+/* Table header */
+.table-common thead th {
+  background-color: var(--color-primary, #007bff);
+  color: var(--color-text-light, #fff);
+  font-weight: 600;
+  text-align: left;
+}
+
+/* Table cells */
+.table-common th,
+.table-common td {
+  padding: 12px 15px;
+  border: 1px solid var(--color-border, #ddd);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Alternate row colors */
+.table-common tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-.table-common tr:hover,
-table tr:hover {
+.table-common tbody tr:hover {
   background-color: #f1f3f5;
 }
 
-.table-common button,
-table button {
+/* Buttons */
+.table-common button {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 16px;
-  color: var(--color-primary);
+  color: var(--color-primary, #007bff);
+  transition: color 0.2s ease;
 }
+
+.table-common button:hover {
+  color: var(--color-accent, #0056b3);
+}
+
+/* Horizontal scrollbar if needed */
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 4px;
+}
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #999;
+}
+
 
 /* ====== Common Red Asterisk for Required Fields ====== */
 label.required::after {

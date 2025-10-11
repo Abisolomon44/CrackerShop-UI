@@ -1,1 +1,121 @@
-<p>unit works!</p>
+<div class="container mt-5">
+  <div class="row g-4">
+    <!-- Unit Form -->
+    <div class="col-lg-4 col-md-5">
+      <div class="form-container p-4">
+        <h2>Unit Master</h2>
+
+        <form #unitForm="ngForm">
+          <!-- Unit Name -->
+          <div class="form-column mb-3">
+            <label for="unitName" class="required">Unit Name</label>
+            <input
+              type="text"
+              id="unitName"
+              class="form-control"
+              [(ngModel)]="unit.unitName"
+              name="unitName"
+              required
+              (ngModelChange)="checkDuplicate()"
+              appFocusOnKey="unitCode"
+              [ngClass]="{ 'is-warning': duplicateError }"
+            />
+            <div class="text-danger" *ngIf="unitForm.controls['unitName']?.invalid">
+              Unit Name is required.
+            </div>
+            <div class="text-warning small mt-1" *ngIf="duplicateError">
+              This unit already exists!
+            </div>
+          </div>
+
+          <!-- Unit Code -->
+          <div class="form-column mb-3">
+            <label for="unitCode">Unit Code</label>
+            <input
+              type="text"
+              id="unitCode"
+              class="form-control"
+              [(ngModel)]="unit.unitCode"
+              name="unitCode"
+              appFocusOnKey="isActive"
+            />
+          </div>
+
+          <!-- Active Toggle -->
+          <div class="form-check form-switch mb-3">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="isActive"
+              [(ngModel)]="unit.isActive"
+              name="isActive"
+              appFocusOnKey="saveBtn"
+            />
+            <label class="form-check-label" for="isActive">
+              {{ unit.isActive ? "Active" : "Inactive" }}
+            </label>
+          </div>
+
+          <!-- Buttons -->
+          <div class="form-actions d-flex gap-2">
+            <button
+              (click)="saveOrUpdateUnit()"
+              type="submit"
+              id="saveBtn"
+              class="btn btn-primary flex-fill"
+              [disabled]="unitForm.invalid || duplicateError"
+            >
+              <i class="bi bi-save me-1"></i>
+              {{ unit.unitID ? "Update" : "Save" }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline flex-fill"
+              (click)="resetUnit()"
+            >
+              <i class="bi bi-arrow-clockwise me-1"></i> Reset
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Unit Table -->
+    <div class="table-container col-lg-8 col-md-7">
+      <table class="table-common">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Unit Name</th>
+            <th>Unit Code</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of units; let i = index" [class.table-warning]="unit.unitID === u.unitID">
+            <td>{{ i + 1 }}</td>
+            <td>{{ u.unitName }}</td>
+            <td>{{ u.unitCode }}</td>
+            <td>
+              <span class="badge" [ngClass]="u.isActive ? 'bg-success' : 'bg-danger'">
+                {{ u.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-sm" title="Edit" (click)="editUnit(u)">
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+              <button class="btn btn-sm" title="Delete" (click)="deleteUnit(u)">
+                <i class="bi bi-trash-fill"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="units.length === 0">
+            <td colspan="5" class="text-center text-muted">No units found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

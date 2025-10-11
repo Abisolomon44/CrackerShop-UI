@@ -1,1 +1,80 @@
-<p>customer works!</p>
+<div class="container mt-5">
+  <div class="row g-4">
+    <!-- Customer Form (full width) -->
+    <div class="col-12">
+      <div class="form-container p-4">
+        <h2>Customer Master</h2>
+        <form #customerForm="ngForm">
+          <div class="row g-3">
+
+            <div class="col-md-3">
+              <label for="customerName" class="required">Name</label>
+              <input type="text" id="customerName" class="form-control"
+                     [(ngModel)]="customer.customerName" name="customerName" required />
+              <div class="text-danger" *ngIf="customerForm.controls['customerName']?.invalid">
+                Required
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <label for="phone">Phone</label>
+              <input type="text" id="phone" class="form-control" [(ngModel)]="customer.phone" name="phone" />
+            </div>
+
+            <div class="col-md-3">
+              <label for="email">Email</label>
+              <input type="email" id="email" class="form-control" [(ngModel)]="customer.email" name="email" />
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end">
+              <button type="button" class="btn btn-primary w-100" (click)="saveOrUpdateCustomer()"
+                      [disabled]="customerForm.invalid || duplicateError">
+                {{ customer.customerID ? 'Update' : 'Save' }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Customer Table -->
+    <div class="col-12">
+      <div class="table-container mt-4">
+        <table class="table table-bordered table-hover table-common">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of customers; let i = index" [class.table-warning]="customer.customerID === c.customerID">
+              <td>{{ i + 1 }}</td>
+              <td>{{ c.customerCode }}</td>
+              <td>{{ c.customerName }}</td>
+              <td>{{ c.phone }}</td>
+              <td>{{ c.email }}</td>
+              <td>
+                <span class="badge" [ngClass]="c.isActive ? 'bg-success' : 'bg-danger'">
+                  {{ c.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td class="text-center">
+                <button class="btn btn-sm btn-primary me-1" (click)="editCustomer(c)"><i class="bi bi-pencil-fill"></i></button>
+                <button class="btn btn-sm btn-danger" (click)="deleteCustomer(c)"><i class="bi bi-trash-fill"></i></button>
+              </td>
+            </tr>
+            <tr *ngIf="customers.length === 0">
+              <td colspan="7" class="text-center text-muted">No customers found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

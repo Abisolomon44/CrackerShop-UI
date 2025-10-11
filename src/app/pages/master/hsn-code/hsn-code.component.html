@@ -1,1 +1,52 @@
-<p>hsn-code works!</p>
+<div class="container mt-5">
+  <div class="row g-4">
+    <!-- HSN Form -->
+    <div class="col-lg-4 col-md-5">
+      <div class="form-container p-4">
+        <h2>HSN Master</h2>
+        <form #hsnForm="ngForm">
+          <div class="form-column mb-3">
+            <label for="description" class="required">HSN Name</label>
+            <input type="text" id="description" class="form-control" [(ngModel)]="hsn.description" name="description" required />
+          </div>
+
+          <div class="form-check form-switch mb-3">
+            <input type="checkbox" class="form-check-input" id="isActive" [(ngModel)]="hsn.isActive" name="isActive"/>
+            <label class="form-check-label" for="isActive">{{ hsn.isActive ? 'Active' : 'Inactive' }}</label>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-primary flex-fill" (click)="saveOrUpdateHSN()">{{ hsn.hsnid ? 'Update' : 'Save' }}</button>
+            <button type="button" class="btn btn-outline flex-fill" (click)="resetHSN()">Reset</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- HSN Table -->
+    <div class="table-container col-lg-8 col-md-7">
+      <table class="table-common">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>HSN Name</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let h of hsns; let i = index" [class.table-warning]="hsn.hsnid === h.hsnid">
+            <td>{{ i + 1 }}</td>
+            <td>{{ h.description }}</td>
+            <td><span class="badge" [ngClass]="h.isActive ? 'bg-success' : 'bg-danger'">{{ h.isActive ? 'Active' : 'Inactive' }}</span></td>
+            <td class="text-center">
+              <button class="btn btn-sm" (click)="editHSN(h)"><i class="bi bi-pencil-fill"></i></button>
+              <button class="btn btn-sm" (click)="deleteHSN(h)"><i class="bi bi-trash-fill"></i></button>
+            </td>
+          </tr>
+          <tr *ngIf="hsns.length === 0"><td colspan="4" class="text-center text-muted">No HSN names found.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

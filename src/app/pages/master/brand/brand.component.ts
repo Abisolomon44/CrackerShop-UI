@@ -61,7 +61,6 @@ export class BrandComponent {
 
   checkDuplicate(): void {
 
-    
     this.duplicateError = this.validationService.isDuplicate(
       this.brand.brandName,
       this.brands,

@@ -7,38 +7,75 @@ import Swal, { SweetAlertIcon } from 'sweetalert2';
 export class SweetAlertService {
 
   // -----------------------------
-  // Toast notifications (non-blocking)
+  // Toast notification (non-blocking)
   // -----------------------------
-  toast(message: string, icon: SweetAlertIcon = 'info', timer: number = 2000) {
+  toast(message: string, icon: SweetAlertIcon = 'info', timer: number = 2000, afterClose?: () => void) {
     Swal.fire({
       toast: true,
-      position: 'top-end',         // corner position
-      showConfirmButton: false,    // no OK button
+      position: 'top-end',
+      showConfirmButton: false,
       timer,
       timerProgressBar: true,
       icon,
       title: message
+    }).then(() => {
+      if (afterClose) afterClose();
     });
   }
 
-  success(message: string, p0: string, p1: () => void, timer: number = 2000) {
-    this.toast(message, 'success', timer);
+  // -----------------------------
+  // Common message types
+  // -----------------------------
+  success(title: string, message: string, afterClose?: () => void) {
+    Swal.fire({
+      icon: 'success',
+      title,
+      text: message,
+      timer: 2000,
+      showConfirmButton: false
+    }).then(() => {
+      if (afterClose) afterClose();
+    });
   }
 
-  info(message: string, timer: number = 2000) {
-    this.toast(message, 'info', timer);
+  warning(title: string, message: string, afterClose?: () => void) {
+    Swal.fire({
+      icon: 'warning',
+      title,
+      text: message,
+      timer: 2000,
+      showConfirmButton: false
+    }).then(() => {
+      if (afterClose) afterClose();
+    });
   }
 
-  warning(message: string, p0: string, p1: () => void, timer: number = 2000) {
-    this.toast(message, 'warning', timer);
+  error(title: string, message: string, afterClose?: () => void) {
+    Swal.fire({
+      icon: 'error',
+      title,
+      text: message,
+      timer: 2000,
+      showConfirmButton: false
+    }).then(() => {
+      if (afterClose) afterClose();
+    });
   }
 
-  error(message: string, p0: string, p1: () => void, timer: number = 2000) {
-    this.toast(message, 'error', timer);
+  info(title: string, message: string, afterClose?: () => void) {
+    Swal.fire({
+      icon: 'info',
+      title,
+      text: message,
+      timer: 2000,
+      showConfirmButton: false
+    }).then(() => {
+      if (afterClose) afterClose();
+    });
   }
 
   // -----------------------------
-  // Modal confirmation dialog (blocking)
+  // Confirmation dialog (blocking)
   // -----------------------------
   confirm(title: string, text: string, confirmText: string = 'Yes', cancelText: string = 'No') {
     return Swal.fire({
