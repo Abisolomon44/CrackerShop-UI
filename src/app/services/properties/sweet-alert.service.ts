@@ -1,4 +1,3 @@
-// sweet-alert.service.ts
 import { Injectable } from '@angular/core';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
 
@@ -7,37 +6,40 @@ import Swal, { SweetAlertIcon } from 'sweetalert2';
 })
 export class SweetAlertService {
 
-  // Generic alert
-  alert(title: string, text: string, icon: SweetAlertIcon = 'info') {
-    return Swal.fire({
-      title,
-      text,
+  // -----------------------------
+  // Toast notifications (non-blocking)
+  // -----------------------------
+  toast(message: string, icon: SweetAlertIcon = 'info', timer: number = 2000) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',         // corner position
+      showConfirmButton: false,    // no OK button
+      timer,
+      timerProgressBar: true,
       icon,
-      confirmButtonText: 'OK'
+      title: message
     });
   }
 
-  // Success alert
-  success(title: string, text: string) {
-    return this.alert(title, text, 'success');
+  success(message: string, p0: string, p1: () => void, timer: number = 2000) {
+    this.toast(message, 'success', timer);
   }
 
-  // Info alert
-  info(title: string, text: string) {
-    return this.alert(title, text, 'info');
+  info(message: string, timer: number = 2000) {
+    this.toast(message, 'info', timer);
   }
 
-  // Warning alert
-  warning(title: string, text: string) {
-    return this.alert(title, text, 'warning');
+  warning(message: string, p0: string, p1: () => void, timer: number = 2000) {
+    this.toast(message, 'warning', timer);
   }
 
-  // Error alert
-  error(title: string, text: string) {
-    return this.alert(title, text, 'error');
+  error(message: string, p0: string, p1: () => void, timer: number = 2000) {
+    this.toast(message, 'error', timer);
   }
 
-  // Confirmation dialog
+  // -----------------------------
+  // Modal confirmation dialog (blocking)
+  // -----------------------------
   confirm(title: string, text: string, confirmText: string = 'Yes', cancelText: string = 'No') {
     return Swal.fire({
       title,
@@ -49,7 +51,7 @@ export class SweetAlertService {
     });
   }
 
-  // Input prompt
+  // Input prompt (blocking)
   prompt(title: string, text: string, placeholder: string = '') {
     return Swal.fire({
       title,

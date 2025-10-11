@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MasterService } from '../../../services/master.service';
 import { Brand } from '../../models/common-models/master-models/master';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
 import { ValidationService } from '../../../services/properties/validation.service';
-import { AutoFocusDirective } from '../../../directives/auto-focus.directive';
 import { FocusOnKeyDirective } from '../../../directives/focus-on-key.directive';
+import { SweetAlertService } from '../../../services/properties/sweet-alert.service';
+
 interface ApiResponse {
   success: boolean;
   message?: string;
@@ -15,7 +15,7 @@ interface ApiResponse {
 @Component({
   selector: 'app-brand',
   standalone: true,
-  imports: [FormsModule, CommonModule, AutoFocusDirective,FocusOnKeyDirective],
+  imports: [FormsModule, CommonModule, FocusOnKeyDirective],
   templateUrl: './brand.component.html',
   styleUrls: ['./brand.component.css'],
 })
@@ -24,9 +24,12 @@ export class BrandComponent {
   brand: Brand = this.getEmptyBrand();
   duplicateError = false;
 
+  @ViewChild(FocusOnKeyDirective) brandInput!: FocusOnKeyDirective;
+
   constructor(
     private brandService: MasterService,
-    private validationService: ValidationService
+    private validationService: ValidationService,
+    private swall: SweetAlertService
   ) {}
 
   ngOnInit(): void {
@@ -52,11 +55,13 @@ export class BrandComponent {
   loadBrands(): void {
     this.brandService.getBrands().subscribe({
       next: (res: Brand[]) => (this.brands = res),
-      error: (err) => this.showAlert('Error', 'Failed to load brands!', 'error', err),
+      error: () => this.swall.error('Error', 'Failed to load brands!', () => this.focusBrand()),
     });
   }
 
   checkDuplicate(): void {
+
+    
     this.duplicateError = this.validationService.isDuplicate(
       this.brand.brandName,
       this.brands,
@@ -70,12 +75,12 @@ export class BrandComponent {
     this.checkDuplicate();
 
     if (!this.brand.brandName) {
-      this.showAlert('Validation', 'Brand Name is required.', 'warning');
+      this.swall.warning('Validation', 'Brand Name is required!', () => this.focusBrand());
       return false;
     }
 
     if (this.duplicateError) {
-      this.showAlert('Validation', 'Brand already exists!', 'warning');
+      this.swall.warning('Validation', 'Brand already exists!', () => this.focusBrand());
       return false;
     }
 
@@ -88,54 +93,61 @@ export class BrandComponent {
     this.brandService.saveBrand(this.brand).subscribe({
       next: (res: ApiResponse) => {
         if (res.success) {
-          this.showAlert('Success', res.message || 'Brand saved successfully!', 'success');
           this.loadBrands();
           this.resetBrand();
+          this.swall.success('Success', res.message || 'Brand saved successfully!', () =>
+            this.focusBrand()
+          );
         } else {
-          this.showAlert('Error', res.message || 'Something went wrong!', 'error');
+          this.swall.error('Error', res.message || 'Something went wrong!', () =>
+            this.focusBrand()
+          );
         }
       },
-      error: (err) => this.showAlert('Error', 'Failed to save brand!', 'error', err),
+      error: () => this.swall.error('Error', 'Failed to save brand!', () => this.focusBrand()),
     });
   }
 
   editBrand(b: Brand): void {
     this.brand = { ...b };
+    setTimeout(() => this.focusBrand(), 0);
   }
 
   deleteBrand(b: Brand): void {
-    Swal.fire({
-      title: `Delete ${b.brandName}?`,
-      text: 'This will mark the brand as inactive.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (!result.isConfirmed) return;
+    this.swall
+      .confirm(`Delete ${b.brandName}?`, 'This will mark the brand as inactive.')
+      .then((result) => {
+        if (!result.isConfirmed) return;
 
-      const deletedBrand = { ...b, isActive: false };
-      this.brandService.saveBrand(deletedBrand).subscribe({
-        next: (res: ApiResponse) => {
-          if (res.success) {
-            this.showAlert('Deleted!', res.message || 'Brand deleted!', 'success');
-            this.loadBrands();
-          } else {
-            this.showAlert('Error', res.message || 'Failed to delete brand!', 'error');
-          }
-        },
-        error: (err) => this.showAlert('Error', 'Failed to delete brand!', 'error', err),
+        const deletedBrand = { ...b, isActive: false };
+        this.brandService.saveBrand(deletedBrand).subscribe({
+          next: (res: ApiResponse) => {
+            if (res.success) {
+              this.loadBrands();
+              this.swall.success('Deleted!', res.message || 'Brand deleted!', () =>
+                this.focusBrand()
+              );
+            } else {
+              this.swall.error('Error', res.message || 'Failed to delete brand!', () =>
+                this.focusBrand()
+              );
+            }
+          },
+          error: () =>
+            this.swall.error('Error', 'Failed to delete brand!', () => this.focusBrand()),
+        });
       });
-    });
   }
 
   resetBrand(): void {
     this.brand = this.getEmptyBrand();
     this.duplicateError = false;
+    setTimeout(() => this.focusBrand(), 0);
   }
 
-  private showAlert(title: string, text: string, icon: 'success' | 'error' | 'warning' | 'info', error?: any) {
-    if (error) console.error(error);
-    Swal.fire(title, text, icon);
+  private focusBrand(): void {
+    const el = document.getElementById('brandName') as HTMLInputElement;
+    el?.focus();
+    el?.select();
   }
 }

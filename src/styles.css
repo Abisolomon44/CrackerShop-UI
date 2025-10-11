@@ -306,44 +306,17 @@ table button {
   color: var(--color-primary);
 }
 
-
-
-/* Red border for invalid required */
-.is-invalid {
-  border-color: #dc3545 !important;
-}
-
-/* Optional: make input background light red */
-.is-invalid:focus {
-  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-}
-
-/* Warning color border for duplicate error */
-.is-warning {
-  border-color: #ffc107 !important; /* Bootstrap warning color */
-}
-
-.is-warning:focus {
-  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
-}
-
-
-label.text-danger {
-  color: #dc3545 !important; /* same as Bootstrap's danger/red */
-}
-
-
 /* ====== Common Red Asterisk for Required Fields ====== */
 label.required::after {
   content: " *";
-  color: red;
+  color: red;            /* red asterisk only */
   font-weight: bold;
 }
 
-/* ====== Optional: Make the entire label red for required fields ====== */
+/* ====== Keep label text normal (not red) ====== */
 label.required {
-  color: red;
-  font-weight: 500;
+  color: inherit;        /* removes red from label text */
+  font-weight: 500;      /* optional: slightly bold for emphasis */
 }
 
 /* ====== Common Validation Message Styles ====== */
@@ -354,17 +327,6 @@ label.required {
 .text-warning {
   color: #ffc107 !important; /* Bootstrap yellow */
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /* ===== Responsive ===== */
 @media (max-width: 991px) {

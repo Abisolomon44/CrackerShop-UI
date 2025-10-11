@@ -9,7 +9,7 @@ export class ValidationService {
    * Check if a value is duplicate in a list of objects (active only)
    * Spaces are ignored, case-insensitive
    * @param value string to check
-   * @param list array of objects
+   * @param list array of objectsa
    * @param fieldName field to check in object
    * @param ignoreId optional: ID to ignore (for edit)
    * @returns true if duplicate exists

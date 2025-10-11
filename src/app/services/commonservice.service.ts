@@ -3,14 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Company, Branch, Department, Role } from '../pages/models/common-models/companyMaster';
 import { User,UserPermission,Module } from '../pages/models/common-models/user';
-
+import { environment } from '../config';
 @Injectable({
 
   providedIn: 'root'
 })
 export class CommonserviceService {
-  private baseUrl = 'https://localhost:7097/api/Common';
 
+    private baseUrl = `${environment.apiBaseUrl}/Common`;
+  
   constructor(private http: HttpClient) { }
 
   saveCompany(company: Company): Observable<number> {

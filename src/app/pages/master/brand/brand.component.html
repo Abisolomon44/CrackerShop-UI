@@ -6,7 +6,7 @@
       <div class="form-container p-4">
         <h2>Brand Master</h2>
 
-        <form #brandForm="ngForm" (ngSubmit)="saveOrUpdateBrand()">
+        <form #brandForm="ngForm" >
 
           <!-- Brand Name -->
           <div class="form-column mb-3">
@@ -18,18 +18,16 @@
               [(ngModel)]="brand.brandName"
               name="brandName"
               required
-              [appAutoFocus]="true"
-              [autoSelect]="true"
+              [autoFocus]="true"    
               #brandName="ngModel"
               (ngModelChange)="checkDuplicate()"
               appFocusOnKey="description"
               [autoSelectNext]="true"
               [ngClass]="{
-                'is-invalid': brandName.invalid && brandName.touched,
                 'is-warning': duplicateError
               }"
             />
-            <div class="text-danger" *ngIf="brandName.invalid && brandName.touched">
+            <div class="text-danger" *ngIf="brandName.invalid">
               Brand Name is required.
             </div>
             <div class="text-warning small mt-1" *ngIf="duplicateError">
@@ -69,10 +67,12 @@
           <!-- Buttons -->
           <div class="form-actions d-flex gap-2">
             <button
+             (click)="saveOrUpdateBrand()"
               type="submit"
               id="saveBtn"
               class="btn btn-primary flex-fill"
               [disabled]="brandForm.invalid || duplicateError"
+               
             >
               <i class="bi bi-save me-1"></i>
               {{ brand.brandID ? 'Update' : 'Save' }}
