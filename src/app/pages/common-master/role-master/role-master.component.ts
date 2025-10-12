@@ -4,7 +4,7 @@ import { Company, Branch, Department, Role } from '../../models/common-models/co
 import { CommonserviceService } from '../../../services/commonservice.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { SweetAlertService } from '../../../services/properties/sweet-alert.service';
 
 
 @Component({
@@ -23,7 +23,9 @@ export class RoleMasterComponent {
   roles: Role[] = [];
   role: Role = this.getEmptyRole();
 
-  constructor(private commonservice: CommonserviceService) {}
+  constructor(private commonservice: CommonserviceService,
+              private swallservice: SweetAlertService
+  ) {}
 
   ngOnInit(): void {
     this.loadRoles();
@@ -49,26 +51,26 @@ export class RoleMasterComponent {
       next: res => this.roles = res,
       error: err => {
         console.error(" Error loading roles:", err);
-        alert("Error loading role list.");
+        this.swallservice.error("Error", "Could not load role list.");
       }
     });
   }
 
   saveOrUpdateRole() {
     if (!this.role.roleName ) {
-      alert("Role Name and Code are required!");
+      this.swallservice.error("Error", "Role Name and Code are required!");
       return;
     }
 
     this.commonservice.saveRole(this.role).subscribe({
       next: id => {
-        alert(this.role.roleID > 0 ? "Role updated!" : "Role created!");
+        this.swallservice.success("Success", `Role ${this.role.roleID > 0 ? "updated" : "created"} successfully!`);
         this.loadRoles();
         this.resetForm();
       },
       error: err => {
         console.error(" Error saving role:", err);
-        alert("Error saving role!");
+        this.swallservice.error("Error", "Could not save role.");
       }
     });
   }
@@ -85,13 +87,13 @@ export class RoleMasterComponent {
     r.isActive = false; // soft delete
     this.commonservice.saveRole(r).subscribe({
       next: id => {
-        console.log("🗑️ Role deleted (soft delete), ID:", id);
-        alert("Role deleted successfully!");
+        console.log("Role deleted (soft delete), ID:", id);
+        this.swallservice.success("Success", "Role deleted successfully!");
         this.loadRoles();
       },
       error: err => {
-        console.error("❌ Error deleting role:", err);
-        alert("Error deleting role.");
+        console.error(" Error deleting role:", err);
+        this.swallservice.error("Error", "Could not delete role.");
       }
     });
   }

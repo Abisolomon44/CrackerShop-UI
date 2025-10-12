@@ -1,11 +1,10 @@
 <div class="container mt-5">
+  <!-- Product Form -->
   <div class="row g-4">
-    <!-- Product Form -->
     <div class="col-12">
       <div class="form-container p-4 rounded shadow-sm bg-light">
         <h2>Product Master</h2>
         <form #productForm="ngForm">
-          
           <!-- Row 1: Company, Product Name, Product Code, Category -->
           <div class="form-row-four mt-2">
             <div class="form-column">
@@ -27,7 +26,9 @@
             </div>
 
             <div class="form-column">
-              <label for="productName" class="form-label required">Product Name</label>
+              <label for="productName" class="form-label required"
+                >Product Name</label
+              >
               <input
                 type="text"
                 id="productName"
@@ -40,9 +41,9 @@
                 targetId="productCode"
                 (ngModelChange)="checkDuplicate()"
               />
-              <small *ngIf="duplicateError" class="text-danger">
-                Product Name already exists!
-              </small>
+              <small *ngIf="duplicateError" class="text-danger"
+                >Product Name already exists!</small
+              >
             </div>
 
             <div class="form-column">
@@ -90,7 +91,10 @@
                 targetId="brandID"
               >
                 <option [ngValue]="0">--Select--</option>
-                <option *ngFor="let sc of subCategories" [ngValue]="sc.subCategoryID">
+                <option
+                  *ngFor="let sc of subCategories"
+                  [ngValue]="sc.subCategoryID"
+                >
                   {{ sc.subCategoryName }}
                 </option>
               </select>
@@ -227,7 +231,9 @@
             </div>
 
             <div class="form-column">
-              <label for="wholesalePrice" class="form-label">Wholesale Price</label>
+              <label for="wholesalePrice" class="form-label"
+                >Wholesale Price</label
+              >
               <input
                 type="number"
                 id="wholesalePrice"
@@ -253,7 +259,9 @@
             </div>
 
             <div class="form-column">
-              <label for="discountAmount" class="form-label">Discount Amount</label>
+              <label for="discountAmount" class="form-label"
+                >Discount Amount</label
+              >
               <input
                 type="number"
                 id="discountAmount"
@@ -266,82 +274,123 @@
             </div>
           </div>
 
-  <!-- Product Table -->
-    <div class="col-12 mt-4">
-      <table class="table table-bordered table-hover">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Company</th>
-            <th>Category</th>
-            <th>SubCategory</th>
-            <th>Brand</th>
-            <th>HSN</th>
-            <th>Tax</th>
-            <th>Cess</th>
-            <th>Retail</th>
-            <th>MRP</th>
-            <th>Purchase</th>
-            <th>Wholesale</th>
-            <th>Sale</th>
-            <th>Disc Amt</th>
-            <th>Disc %</th>
-            <th>Opening</th>
-            <th>Reorder</th>
-            <th>Current</th>
-            <th>Barcode</th>
-            <th>Status</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let p of products; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ p.productCode }}</td>
-            <td>{{ p.productName }}</td>
-            <td>{{ getCompanyName(p.companyID) }}</td>
-            <td>{{ getCategoryName(p.categoryID) }}</td>
-            <td>{{ getSubCategoryName(p.subCategoryID) }}</td>
-            <td>{{ getBrandName(p.brandID) }}</td>
-            <td>{{ getHSNCode(p.hsnid) }}</td>
-            <td>{{ getTaxName(p.taxID) }}</td>
-            <td>{{ getCessName(p.cessID) }}</td>
-            <td>{{ p.retailPrice }}</td>
-            <td>{{ p.mrp }}</td>
-            <td>{{ p.purchaseRate }}</td>
-            <td>{{ p.wholesalePrice }}</td>
-            <td>{{ p.saleRate }}</td>
-            <td>{{ p.discountAmount }}</td>
-            <td>{{ p.discountPercentage }}</td>
-            <td>{{ p.openingStock }}</td>
-            <td>{{ p.reorderLevel }}</td>
-            <td>{{ p.currentStock }}</td>
-            <td>{{ p.barcode }}</td>
-            <td>
-              <span [class]="p.isActive ? 'badge bg-success' : 'badge bg-danger'">
-                {{ p.isActive ? "Active" : "Inactive" }}
-              </span>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-sm btn-primary me-1" (click)="editProduct(p)">Edit</button>
-              <button class="btn btn-sm btn-danger" (click)="deleteProduct(p)">Delete</button>
-            </td>
-          </tr>
-          <tr *ngIf="products.length === 0">
-            <td colspan="23" class="text-center text-muted">No products found.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+       <!-- Action Buttons -->
+<div class="d-flex justify-content-end gap-2 mt-3 flex-wrap">
 
+  <!-- Save / Update -->
+  <button type="button" class="btn btn-primary d-flex align-items-center px-4 py-2"
+          (click)="saveOrUpdateProduct()">
+    <i class="bi bi-check-circle me-2"></i>
+    {{ product.productID > 0 ? 'Update' : 'Save' }}
+  </button>
 
-          
+  <!-- Delete -->
+  <button type="button" class="btn btn-danger d-flex align-items-center px-4 py-2"
+          [disabled]="!product.productID || product.productID === 0"
+          (click)="deleteProduct(product)">
+    <i class="bi bi-trash me-2"></i>
+    Delete
+  </button>
+
+  <!-- Reset -->
+  <button type="button" class="btn btn-secondary d-flex align-items-center px-4 py-2"
+          (click)="resetProduct()">
+    <i class="bi bi-arrow-counterclockwise me-2"></i>
+    Reset
+  </button>
+
+</div>
+
         </form>
       </div>
     </div>
   </div>
-</div>
 
-  
+  <!-- Product Table -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="table-container">
+        <table class="table-common">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Company</th>
+              <th>Category</th>
+              <th>SubCategory</th>
+              <th>Brand</th>
+              <th>HSN</th>
+              <th>Tax</th>
+              <th>Cess</th>
+              <th>Retail</th>
+              <th>MRP</th>
+              <th>Purchase</th>
+              <th>Wholesale</th>
+              <th>Sale</th>
+              <th>Disc Amt</th>
+              <th>Disc %</th>
+              <th>Opening</th>
+              <th>Reorder</th>
+              <th>Current</th>
+              <th>Barcode</th>
+              <th>Status</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of products; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ p.productCode }}</td>
+              <td>{{ p.productName }}</td>
+              <td>{{ getCompanyName(p.companyID) }}</td>
+              <td>{{ getCategoryName(p.categoryID) }}</td>
+              <td>{{ getSubCategoryName(p.subCategoryID) }}</td>
+              <td>{{ getBrandName(p.brandID) }}</td>
+              <td>{{ getHSNCode(p.hsnid) }}</td>
+              <td>{{ getTaxName(p.taxID) }}</td>
+              <td>{{ getCessName(p.cessID) }}</td>
+              <td>{{ p.retailPrice }}</td>
+              <td>{{ p.mrp }}</td>
+              <td>{{ p.purchaseRate }}</td>
+              <td>{{ p.wholesalePrice }}</td>
+              <td>{{ p.saleRate }}</td>
+              <td>{{ p.discountAmount }}</td>
+              <td>{{ p.discountPercentage }}</td>
+              <td>{{ p.openingStock }}</td>
+              <td>{{ p.reorderLevel }}</td>
+              <td>{{ p.currentStock }}</td>
+              <td>{{ p.barcode }}</td>
+              <td>
+                <span
+                  [class]="p.isActive ? 'badge bg-success' : 'badge bg-danger'"
+                >
+                  {{ p.isActive ? "Active" : "Inactive" }}
+                </span>
+              </td>
+              <td class="text-center">
+                <button
+                  class="btn btn-sm btn-primary me-1"
+                  (click)="editProduct(p)"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn btn-sm btn-danger"
+                  (click)="deleteProduct(p)"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="products.length === 0">
+              <td colspan="23" class="text-center text-muted">
+                No products found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

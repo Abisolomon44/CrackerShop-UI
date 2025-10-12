@@ -6,13 +6,9 @@
       <div class="form-container">
   <h2 class="mb-4 text-primary fw-bold text-center">Role Master</h2>
 
-        <form (ngSubmit)="saveOrUpdateRole()">
+        <form >
 
-          <div class="form-column mb-3">
-            <label>Role Code</label>
-            <input type="text" [(ngModel)]="role.roleCode" name="roleCode" class="form-control" required>
-          </div>
-
+        
           <div class="form-column mb-3">
             <label>Role Name</label>
             <input type="text" [(ngModel)]="role.roleName" name="roleName" class="form-control" required>
@@ -25,7 +21,7 @@
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" (click)="saveOrUpdateRole()">
               {{ role.roleID > 0 ? 'Update' : 'Save' }}
             </button>
             <button type="button" class="btn btn-outline" (click)="resetForm()">Reset</button>

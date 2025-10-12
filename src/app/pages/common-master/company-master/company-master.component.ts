@@ -3,11 +3,16 @@ import { Company } from '../../models/common-models/companyMaster'
 import { CommonserviceService } from '../../../services/commonservice.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { FocusOnKeyDirective } from '../../../directives/focus-on-key.directive';
+import { InputRestrictDirective } from '../../../directives/input-restrict.directive';
+import { SweetAlertService } from '../../../services/properties/sweet-alert.service';
 @Component({
   selector: 'app-company-master',
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    FocusOnKeyDirective,
+    InputRestrictDirective
   ],
   templateUrl: './company-master.component.html',
   styleUrls: ['./company-master.component.css']
@@ -18,14 +23,17 @@ export class CompanyMasterComponent {
 
   companies: Company[] = [];
   company: Company = {} as Company;
-  constructor(private commonservice: CommonserviceService) { }
+  constructor(private commonservice: CommonserviceService,
+    private swallservice:SweetAlertService
+  ) { }
   ngOnInit(): void {
+    this.resetForm();
     this.loadCompanies();
-  }
+  } 
 
   async saveOrDeleteCompany() {
-  if (!this.company.companyName ) {
-    alert("Company Name and Code are required!");
+  if (!this.company.companyName) {
+    this.swallservice.error("Validation Error", "Company Name is required!");
     return;
   }
 
@@ -37,16 +45,23 @@ export class CompanyMasterComponent {
   }
 
   this.commonservice.saveCompany(this.company).subscribe({
-    next: id => {
-      alert(this.company.companyID > 0 ? "Company updated!" : "Company created!");
-      this.loadCompanies();
-      this.resetForm();
-      this.selectedLogoFile = null;
-      this.selectedImageFile = null;
+    next: (response: any) => {
+      if (response) {
+        this.swallservice.success(
+          "Success",
+          this.company.companyID > 0 ? "Company updated!" : "Company created!"
+        );
+        this.loadCompanies();
+        this.resetForm();
+        this.selectedLogoFile = null;
+        this.selectedImageFile = null;
+      } else {
+        this.swallservice.error("Error", "No response from server!");
+      }
     },
-    error: err => {
-      console.error('❌ Error saving company:', err);
-      alert("Error saving company!");
+    error: (err) => {
+      console.error("Error saving company:", err);
+      this.swallservice.error("Error", "Unable to save company!");
     }
   });
 }
@@ -63,13 +78,13 @@ export class CompanyMasterComponent {
     c.isActive = false; // soft delete
     this.commonservice.saveCompany(c).subscribe({
       next: id => {
-        console.log('🗑️ Company deleted (soft delete), ID:', id);
-        alert("Company deleted successfully!");
+        console.log('Company deleted (soft delete), ID:', id);
+        this.swallservice.success("Success", "Company deleted successfully!");
         this.loadCompanies();
       },
       error: err => {
-        console.error('❌ Error deleting company:', err);
-        alert("Error deleting company.");
+        console.error(' Error deleting company:', err);
+        this.swallservice.error("Error", "Error deleting company.");
       }
     });
   }
@@ -106,7 +121,7 @@ export class CompanyMasterComponent {
       companyLogo: null,
       companyImage: null,
       isActive: true,
-      createdByUserID: 0,
+      createdByUserID: this.commonservice.getCurrentUserId(),
       createdSystemName: 'AngularApp'
     };
   }

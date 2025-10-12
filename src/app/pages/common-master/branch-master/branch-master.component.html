@@ -22,7 +22,7 @@
             </select>
           </div>
 
-          <!-- Branch Code -->
+          <!-- Branch Code 
           <div class="form-column mb-3">
             <label for="branchCode">Branch Code</label>
             <input 
@@ -32,7 +32,7 @@
               [(ngModel)]="branch.branchCode" 
               name="branchCode" 
               required>
-          </div>
+          </div>-->
 
           <!-- Branch Name -->
           <div class="form-column mb-3">
@@ -43,6 +43,8 @@
               class="form-control" 
               [(ngModel)]="branch.branchName" 
               name="branchName" 
+              autofocus 
+              appFocusOnKey="true"
               required>
           </div>
 
