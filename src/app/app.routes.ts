@@ -19,6 +19,12 @@ import { TaxComponent } from './pages/master/tax/tax.component';
 import { UnitComponent } from './pages/master/unit/unit.component';
 import { MasterDashboardComponent } from './pages/master/master-dashboard/master-dashboard.component';
 import { CessComponent } from './pages/master/cess/cess.component';
+import { PurchaseEntryComponent } from './pages/purchase/purchase-entry/purchase-entry.component';
+import { PurchaseViewComponent } from './pages/purchase/purchase-view/purchase-view.component';
+import { PurchaseCancelComponent } from './pages/purchase/purchase-cancel/purchase-cancel.component';
+import { SalesEntryComponent } from './pages/sales/sales-entry/sales-entry.component';
+import { SalesViewComponent } from './pages/sales/sales-view/sales-view.component';
+import { SalesEditComponent } from './pages/sales/sales-edit/sales-edit.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -33,41 +39,56 @@ export const routes: Routes = [
       { path: 'master/department', component: DepartmentMasterComponent },
       { path: 'master/role', component: RoleMasterComponent },
       { path: 'master/user', component: UsermasterComponent },
-      { path: '', redirectTo: 'master/company', pathMatch: 'full' }
-    ]
+      { path: '', redirectTo: 'master/company', pathMatch: 'full' },
+    ],
   },
- {
+  {
     path: 'user',
     component: DefaultLayoutComponent,
     children: [
       { path: 'master/accesscontrol', component: AuthenticationComponent },
-      { path: '', redirectTo: 'master/accesscontrol', pathMatch: 'full' }
-    ]
-  }
+      { path: '', redirectTo: 'master/accesscontrol', pathMatch: 'full' },
+    ],
+  },
 
-,
-{
-  path: 'CommonProduct',
-  component: DefaultLayoutComponent,
-  children: [
-    { path: 'brand', component: BrandComponent },
-    { path: 'category', component: CategoryComponent },
-    { path: 'cess', component: CessComponent },
+  {
+    path: 'CommonProduct',
+    component: DefaultLayoutComponent,
+    children: [
+      { path: 'brand', component: BrandComponent },
+      { path: 'category', component: CategoryComponent },
+      { path: 'cess', component: CessComponent },
+      { path: 'customer', component: CustomerComponent },
+      { path: 'hsnCode', component: HsnCodeComponent },
+      { path: 'Product', component: ProductComponent },
+      { path: 'ServiceMaster', component: ServiceMasterComponent },
+      { path: 'subCategory', component: SubCategoryComponent },
+      { path: 'supplier', component: SupplierComponent },
+      { path: 'taxmaster', component: TaxComponent },
+      { path: 'unit', component: UnitComponent },
+      { path: '', redirectTo: 'brand', pathMatch: 'full' },
+    ],
+  },
 
-    { path: 'customer', component: CustomerComponent },
-    { path: 'hsnCode', component: HsnCodeComponent },
-    { path: 'Product', component: ProductComponent },
-    { path: 'ServiceMaster', component: ServiceMasterComponent },
-    { path: 'subCategory', component: SubCategoryComponent },
-    { path: 'supplier', component: SupplierComponent },
-    { path: 'taxmaster', component: TaxComponent },
-    { path: 'unit', component: UnitComponent },
-    { path: '', redirectTo: 'brand', pathMatch: 'full' }
-  ]
-}
+  {
+    path: 'Purchase',
+    component: DefaultLayoutComponent,
+    children: [
+      { path: 'PurchaseEntry', component: PurchaseEntryComponent },
+      { path: 'PurchaseView', component: PurchaseViewComponent },
+      { path: 'PurchaseCancel', component: PurchaseCancelComponent },
+      { path: '', redirectTo: 'PurchaseEntry', pathMatch: 'full' },
+    ],
+  },
 
-
-
-
-
+  {
+    path: 'Sales',
+    component: DefaultLayoutComponent,
+    children: [
+      { path: 'SalesEntry', component: SalesEntryComponent },
+      { path: 'SalesView', component: SalesViewComponent },
+      { path: 'SalesCancel', component: SalesEditComponent },
+      { path: '', redirectTo: 'SalesEntry', pathMatch: 'full' },
+    ],
+  },
 ];
