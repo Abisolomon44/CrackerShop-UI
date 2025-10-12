@@ -12,6 +12,9 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./authentication.component.css'],
 })
 export class AuthenticationComponent {
+clearAllSelections() {
+throw new Error('Method not implemented.');
+}
   roles: Role[] = [];
   users: User[] = [];
   permissions: UserPermission[] = [];
@@ -33,16 +36,16 @@ export class AuthenticationComponent {
   }
 
   loadRoles() {
-    this.service.getRoles().subscribe(res => (this.roles = res));
+    this.service.getRoles().subscribe((res) => (this.roles = res));
   }
 
   loadUsers() {
-    this.service.getUsers().subscribe(res => (this.users = res));
+    this.service.getUsers().subscribe((res) => (this.users = res));
   }
 
   loadPermissionsForRole() {
     if (!this.selectedRoleId) return;
-    this.service.getPermissionsByRole(this.selectedRoleId).subscribe(res => {
+    this.service.getPermissionsByRole(this.selectedRoleId).subscribe((res) => {
       this.permissions = res;
       this.markSelectedModules();
     });
@@ -50,7 +53,7 @@ export class AuthenticationComponent {
 
   loadPermissionsForUser() {
     if (!this.selectedUserId) return;
-    this.service.getPermissionsByUser(this.selectedUserId).subscribe(res => {
+    this.service.getPermissionsByUser(this.selectedUserId).subscribe((res) => {
       this.permissions = res;
       this.markSelectedModules();
     });
@@ -58,35 +61,38 @@ export class AuthenticationComponent {
 
   loadModules() {
     this.service.getAllModules().subscribe(
-      res => {
+      (res) => {
         this.modules = res;
-        res.forEach(m => {
-          if (!(m.moduleID in this.selectedModulesMap)) this.selectedModulesMap[m.moduleID] = false;
-          if (!(m.moduleID in this.permissionNameMap)) this.permissionNameMap[m.moduleID] = '';
+        res.forEach((m) => {
+          if (!(m.moduleID in this.selectedModulesMap))
+            this.selectedModulesMap[m.moduleID] = false;
+          if (!(m.moduleID in this.permissionNameMap))
+            this.permissionNameMap[m.moduleID] = '';
         });
         this.markSelectedModules();
       },
-      err => console.error('Failed to load modules', err)
+      (err) => console.error('Failed to load modules', err)
     );
   }
 
-private markSelectedModules() {
-  if (!this.permissions.length) return;
-  this.modules.forEach(m => {
-    const permission = this.permissions.find(p => +p.moduleID === m.moduleID);
-    this.selectedModulesMap[m.moduleID] = !!permission;
-    this.permissionNameMap[m.moduleID] = permission?.permissionName || '';
-  });
-}
-
-
+  /*
+  private markSelectedModules() {
+    if (!this.permissions.length) return;
+    this.modules.forEach((m) => {
+      const permission = this.permissions.find(
+        (p) => +p.moduleID === m.moduleID
+      );
+      this.selectedModulesMap[m.moduleID] = !!permission;
+      this.permissionNameMap[m.moduleID] = permission?.permissionName || '';
+    });
+  }
+*/  
   savePermission(permission: UserPermission) {
     if (!permission.permissionName || !permission.moduleID) {
       alert('Permission Name is required for each module.');
       return;
     }
-    this.service.savePermission(permission).subscribe(() => {
-    });
+    this.service.savePermission(permission).subscribe(() => {});
   }
 
   deletePermission(id: number) {
@@ -97,9 +103,10 @@ private markSelectedModules() {
     });
   }
 
-  saveAllSelectedModules() {
-  if (!this.selectedUserId && !this.selectedRoleId) {
-    alert('Please select a user or role first.');
+
+saveAllSelectedModules() {
+  if (!this.selectedUserId) {
+    alert('Please select a user first.');
     return;
   }
 
@@ -112,23 +119,64 @@ private markSelectedModules() {
     return;
   }
 
+  const existingPermission = this.permissions.find(p => p.userID === this.selectedUserId);
+
   const permission: UserPermission = {
-    id: 0, // new record
-    userID: this.selectedUserId || 0,
-    moduleID: selectedModuleIDs.join(','), // comma-separated IDs
-    permissionName: 'DefaultPermission', // optional if needed
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    id: existingPermission ? existingPermission.id : 0, // important for update
+    userID: this.selectedUserId,
+    roleID: 0,
+    moduleID: selectedModuleIDs.join(','),
+    permissionName: ''
   };
 
-  this.savePermission(permission);
+  this.service.savePermission(permission).subscribe(() => {
+    if (existingPermission) {
+      alert('Modules updated successfully for this user.');
+    } else {
+      alert('Modules saved successfully for this user.');
+    }
 
-  alert('Selected modules saved successfully.');
-  if (this.selectedUserId) this.loadPermissionsForUser();
-  else if (this.selectedRoleId) this.loadPermissionsForRole();
+    this.loadPermissionsForUser(); // refresh checkboxes
+  });
 }
 
-  hasSelectedModules(): boolean {
-    return Object.values(this.selectedModulesMap).some(v => v);
+
+
+
+
+
+
+
+
+
+
+
+onUserChange() {
+  if (this.selectedUserId) {
+    this.loadPermissionsForUser(); // fetches the row for that user
+  } else {
+    // Clear selections
+    Object.keys(this.selectedModulesMap).forEach(k => this.selectedModulesMap[+k] = false);
+    this.permissions = [];
   }
+}
+
+private markSelectedModules() {
+  Object.keys(this.selectedModulesMap).forEach(k => this.selectedModulesMap[+k] = false);
+
+  this.permissions.forEach(p => {
+    if (!p.moduleID) return;
+
+    let moduleIds: number[] = [];
+    if (typeof p.moduleID === 'string') moduleIds = p.moduleID.split(',').map(id => +id);
+    else if (typeof p.moduleID === 'number') moduleIds = [p.moduleID];
+    else if (Array.isArray(p.moduleID) && Array.isArray(p.moduleID) && (p.moduleID as Array<number | string>).every(id => typeof id === 'number' || typeof id === 'string')) {
+      moduleIds = (p.moduleID as Array<number | string>).map(id => +id);
+    }
+
+    moduleIds.forEach(id => this.selectedModulesMap[id] = true);
+  });
+}
+
+
 }

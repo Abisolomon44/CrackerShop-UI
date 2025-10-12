@@ -19,6 +19,7 @@ export interface UserPermission {
   id: number;
   userID?: number;
   moduleID: string;
+  roleID?: number;
   permissionName: string;
   createdAt?: string;
   updatedAt?: string;
