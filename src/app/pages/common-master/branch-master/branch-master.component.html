@@ -1,14 +1,16 @@
 <div class="container mt-5">
-  <h2 class="mb-4 text-primary fw-bold text-center">Branch Master</h2>
 
   <div class="row g-4">
+
     <!-- Branch Form -->
     <div class="col-lg-4 col-md-5">
-      <h5 class="mb-3 text-secondary">Branch Details</h5>
-      <form (ngSubmit)="saveOrDeleteBranch()">
-        <div class="mb-3 row">
-          <label for="company" class="col-sm-4 col-form-label">Company</label>
-          <div class="col-sm-8">
+      <div class="form-container">
+  <h2 class="mb-4 text-primary fw-bold text-center">Branch Master</h2>
+
+        <form (ngSubmit)="saveOrDeleteBranch()">
+          <!-- Company Select -->
+          <div class="form-column mb-3">
+            <label for="company">Company</label>
             <select 
               id="company" 
               class="form-select" 
@@ -19,11 +21,10 @@
               <option *ngFor="let c of companies" [value]="c.companyID">{{c.companyName}}</option>
             </select>
           </div>
-        </div>
 
-        <div class="mb-3 row">
-          <label for="branchCode" class="col-sm-4 col-form-label">Branch Code</label>
-          <div class="col-sm-8">
+          <!-- Branch Code 
+          <div class="form-column mb-3">
+            <label for="branchCode">Branch Code</label>
             <input 
               type="text" 
               id="branchCode" 
@@ -31,25 +32,25 @@
               [(ngModel)]="branch.branchCode" 
               name="branchCode" 
               required>
-          </div>
-        </div>
+          </div>-->
 
-        <div class="mb-3 row">
-          <label for="branchName" class="col-sm-4 col-form-label">Branch Name</label>
-          <div class="col-sm-8">
+          <!-- Branch Name -->
+          <div class="form-column mb-3">
+            <label for="branchName">Branch Name</label>
             <input 
               type="text" 
               id="branchName" 
               class="form-control" 
               [(ngModel)]="branch.branchName" 
               name="branchName" 
+              autofocus 
+              appFocusOnKey="true"
               required>
           </div>
-        </div>
 
-        <div class="mb-3 row">
-          <label for="address" class="col-sm-4 col-form-label">Address</label>
-          <div class="col-sm-8">
+          <!-- Address -->
+          <div class="form-column mb-3">
+            <label for="address">Address</label>
             <textarea 
               id="address" 
               class="form-control" 
@@ -57,61 +58,64 @@
               name="address" 
               rows="3"></textarea>
           </div>
-        </div>
 
-        <div class="d-flex justify-content-between mt-3">
-          <button type="submit" class="btn btn-primary">
-            <i class="bi bi-save"></i> {{ branch.branchID ? 'Update' : 'Save' }}
-          </button>
-          <button type="button" class="btn btn-secondary" (click)="resetBranch()">
-            <i class="bi bi-arrow-clockwise"></i> Reset
-          </button>
-        </div>
-      </form>
+          <!-- Buttons -->
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save"></i> {{ branch.branchID ? 'Update' : 'Save' }}
+            </button>
+            <button type="button" class="btn btn-outline" (click)="resetBranch()">
+              <i class="bi bi-arrow-clockwise"></i> Reset
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- Branch Table -->
     <div class="col-lg-8 col-md-7">
-      <h5 class="mb-3 text-secondary">Branch List</h5>
-      <div class="table-responsive">
-        <table class="table table-striped table-hover align-middle">
-          <thead class="table-dark">
-            <tr>
-              <th>#</th>
-              <th>Company</th>
-              <th>Branch Code</th>
-              <th>Branch Name</th>
-              <th>Address</th>
-              <th>Status</th>
-              <th class="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let b of branches; let i = index">
-              <td>{{ i + 1 }}</td>
-              <td>{{ getCompanyName(b.companyID) }}</td>
-              <td>{{ b.branchCode }}</td>
-              <td>{{ b.branchName }}</td>
-              <td>{{ b.address }}</td>
-              <td>
-                <span class="badge" [ngClass]="b.isActive ? 'bg-success' : 'bg-danger'">
-                  {{ b.isActive ? 'Active' : 'Inactive' }}
-                </span>
-              </td>
-              <td class="text-center">
-                <button class="btn btn-sm btn-outline-warning me-1" title="Edit" (click)="editBranch(b)">
-                  <i class="bi bi-pencil-fill"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger" title="Delete" (click)="deleteBranch(b)">
-                  <i class="bi bi-trash-fill"></i>
-                </button>
-              </td>
-            </tr>
-            <tr *ngIf="branches.length === 0">
-              <td colspan="7" class="text-center text-muted">No branches found.</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="form-container">
+        <h5 class="mb-3 text-secondary">Branch List</h5>
+        <div class="table-responsive">
+          <table class="table-common align-middle">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Company</th>
+                <th>Branch Code</th>
+                <th>Branch Name</th>
+                <th>Address</th>
+                <th>Status</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let b of branches; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ getCompanyName(b.companyID) }}</td>
+                <td>{{ b.branchCode }}</td>
+                <td>{{ b.branchName }}</td>
+                <td>{{ b.address }}</td>
+                <td>
+                  <span class="badge" [ngClass]="b.isActive ? 'bg-success' : 'bg-danger'">
+                    {{ b.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-outline-warning me-1" title="Edit" (click)="editBranch(b)">
+                    <i class="bi bi-pencil-fill"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" title="Delete" (click)="deleteBranch(b)">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="branches.length === 0">
+                <td colspan="7" class="text-center text-muted">No branches found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

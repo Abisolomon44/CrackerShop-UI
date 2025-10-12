@@ -3,7 +3,6 @@
   <ul class="nav nav-pills flex-column mb-auto">
     <ng-container *ngFor="let item of navItems">
       
-      <!-- Single link (no children) -->
       <li *ngIf="!item.children" class="nav-item">
         <a [routerLink]="item.route" routerLinkActive="active" class="nav-link text-dark">
           <i *ngIf="item.icon" class="{{item.icon}} me-2"></i>
@@ -11,7 +10,6 @@
         </a>
       </li>
 
-      <!-- Parent with children (Master) -->
       <li *ngIf="item.children" class="nav-item">
         <a class="nav-link text-dark d-flex justify-content-between align-items-center" 
            (click)="item.expanded = !item.expanded" style="cursor:pointer">

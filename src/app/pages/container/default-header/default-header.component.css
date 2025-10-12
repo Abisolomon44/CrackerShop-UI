@@ -2,77 +2,89 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background-color: #fcfcfc;
+  color: #018852;
+  padding: 0.75rem 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
 }
 
-.header-left .app-title {
-  margin: 0;
+.app-title {
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .header-right {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
-.nav-links {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-links li {
-  margin-right: 20px;
-}
-
-.nav-links li a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.nav-links li a:hover {
-  text-decoration: underline;
-}
-
-.profile {
+.user-menu {
   display: flex;
   align-items: center;
-  margin-left: 20px;
+  cursor: pointer;
+  gap: 0.5rem;
 }
 
-.avatar {
-  width: 32px;
-  height: 32px;
+.user-icon {
+  width: 36px;
+  height: 36px;
+  background-color: #f9f7f433;
   border-radius: 50%;
-  margin-right: 8px;
-  border: 1px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #02771a;
+}
+
+.user-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .username {
   font-weight: 500;
 }
 
-:host {
-  --primary: #033d49; /* fallback, overridden by inline style in template */
-  --primary-light: #065c6c;
-  --primary-dark: #022f36;
-  --text-light: #ffffff;
-  --text-dark: #333333;
+.role {
+  font-size: 0.8rem;
+  opacity: 0.8;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--primary);
-  color: var(--text-light);
-  padding: 10px 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+.dropdown-icon {
+  width: 12px;
+  height: 12px;
+  fill: #fff;
+  margin-left: 0.3rem;
 }
 
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  color: #065c6c;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0.5rem 0 0 0;
+  min-width: 150px;
+  z-index: 100;
+}
+
+.dropdown li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown li:hover {
+  background-color: #e0f2f1;
+}

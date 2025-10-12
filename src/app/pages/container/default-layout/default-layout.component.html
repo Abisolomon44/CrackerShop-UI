@@ -1,14 +1,14 @@
-<div class="layout-container d-flex flex-column vh-100">
+<div class="layout-container">
   <!-- Header -->
   <app-default-header></app-default-header>
 
-  <div class="layout-main d-flex flex-grow-1">
+  <!-- Main area: sidebar + content -->
+  <div class="layout-main">
     <!-- Sidebar -->
     <app-default-aside></app-default-aside>
 
-    <!-- Main content area -->
-    <div class="layout-content flex-grow-1 p-4 bg-light">
-      <!-- Routed components will load here -->
+    <!-- Content area -->
+    <div class="layout-content">
       <router-outlet></router-outlet>
     </div>
   </div>

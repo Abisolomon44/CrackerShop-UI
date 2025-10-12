@@ -1,93 +1,84 @@
 <div class="container mt-5">
 
-  <!-- Page Heading -->
+  <div class="row g-4">
+    <!-- User Form -->
+    <div class="col-lg-4 col-md-5">
+      <div class="form-container">
   <h2 class="mb-4 text-primary fw-bold text-center">User Master</h2>
 
-  <div class="row g-4">
+        <form (ngSubmit)="saveOrUpdateUser()" #userForm="ngForm">
 
-    <!-- Left Column: User Form -->
-    <div class="col-lg-4">
-      <div class="card border-0 shadow-sm rounded-3 h-100">
-        <div class="card-header bg-primary text-white fw-bold">Add / Update User</div>
-        <div class="card-body">
+          <div class="form-column mb-3">
+            <label>User Name</label>
+            <input type="text" [(ngModel)]="user.userName" name="userName" class="form-control" required>
+          </div>
 
-          <form (ngSubmit)="saveOrUpdateUser()" #userForm="ngForm">
+          <div class="form-column mb-3">
+  <label>Password</label>
+  <input type="text" [(ngModel)]="user.passwordHash" name="passwordHash" class="form-control" 
+         [required]="user.userID === 0">
+</div>
 
-            <!-- User Name -->
-            <div class="mb-3">
-              <label class="form-label">User Name</label>
-              <input type="text" class="form-control" [(ngModel)]="user.userName" name="userName" required />
-            </div>
+          <div class="form-column mb-3">
+            <label>Email</label>
+            <input type="email" [(ngModel)]="user.email" name="email" class="form-control" required>
+          </div>
 
-            <!-- Email -->
-            <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input type="email" class="form-control" [(ngModel)]="user.email" name="email" required />
-            </div>
+          <div class="form-column mb-3">
+            <label>Company</label>
+            <select class="form-select" [(ngModel)]="user.companyID" name="companyID">
+              <option [ngValue]="0">-- Select Company --</option>
+              <option *ngFor="let c of companies" [ngValue]="c.companyID">{{ c.companyName }}</option>
+            </select>
+          </div>
 
-            <!-- Company -->
-            <div class="mb-3">
-              <label class="form-label">Company</label>
-              <select class="form-select" [(ngModel)]="user.companyID" name="companyID">
-                <option [ngValue]="0">-- Select Company --</option>
-                <option *ngFor="let c of companies" [ngValue]="c.companyID">{{ c.companyName }}</option>
-              </select>
-            </div>
+          <div class="form-column mb-3">
+            <label>Branch</label>
+            <select class="form-select" [(ngModel)]="user.branchID" name="branchID">
+              <option [ngValue]="0">-- Select Branch --</option>
+              <option *ngFor="let b of branches" [ngValue]="b.branchID">{{ b.branchName }}</option>
+            </select>
+          </div>
 
-            <!-- Branch -->
-            <div class="mb-3">
-              <label class="form-label">Branch</label>
-              <select class="form-select" [(ngModel)]="user.branchID" name="branchID">
-                <option [ngValue]="0">-- Select Branch --</option>
-                <option *ngFor="let b of branches" [ngValue]="b.branchID">{{ b.branchName }}</option>
-              </select>
-            </div>
+          <div class="form-column mb-3">
+            <label>Department</label>
+            <select class="form-select" [(ngModel)]="user.departmentID" name="departmentID">
+              <option [ngValue]="0">-- Select Department --</option>
+              <option *ngFor="let d of departments" [ngValue]="d.departmentID">{{ d.departmentName }}</option>
+            </select>
+          </div>
 
-            <!-- Department -->
-            <div class="mb-3">
-              <label class="form-label">Department</label>
-              <select class="form-select" [(ngModel)]="user.departmentID" name="departmentID">
-                <option [ngValue]="0">-- Select Department --</option>
-                <option *ngFor="let d of departments" [ngValue]="d.departmentID">{{ d.departmentName }}</option>
-              </select>
-            </div>
+          <div class="form-column mb-3">
+            <label>Role</label>
+            <select class="form-select" [(ngModel)]="user.roleID" name="roleID">
+              <option [ngValue]="0">-- Select Role --</option>
+              <option *ngFor="let r of roles" [ngValue]="r.roleID">{{ r.roleName }}</option>
+            </select>
+          </div>
 
-            <!-- Role -->
-            <div class="mb-3">
-              <label class="form-label">Role</label>
-              <select class="form-select" [(ngModel)]="user.roleID" name="roleID">
-                <option [ngValue]="0">-- Select Role --</option>
-                <option *ngFor="let r of roles" [ngValue]="r.roleID">{{ r.roleName }}</option>
-              </select>
-            </div>
+          <div class="form-column mb-3 checkbox-column">
+            <label>
+              <input type="checkbox" [(ngModel)]="user.isActive" name="isActive"> Active
+            </label>
+          </div>
 
-            <!-- Is Active -->
-            <div class="form-check mb-3">
-              <input type="checkbox" class="form-check-input" [(ngModel)]="user.isActive" name="isActive" />
-              <label class="form-check-label">Active</label>
-            </div>
-
-            <!-- Buttons -->
-            <div class="d-flex justify-content-between">
-              <button type="submit" class="btn btn-success">
-                {{ user.userID > 0 ? 'Update' : 'Save' }}
-              </button>
-              <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
-            </div>
-
-          </form>
-        </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              {{ user.userID > 0 ? 'Update' : 'Save' }}
+            </button>
+            <button type="button" class="btn btn-outline" (click)="resetForm()">Reset</button>
+          </div>
+        </form>
       </div>
     </div>
 
-    <!-- Right Column: User List -->
-    <div class="col-lg-8">
-      <div class="card border-0 shadow-sm rounded-3">
-        <div class="card-header bg-dark text-white fw-bold">User List</div>
-        <div class="card-body table-responsive">
-
-          <table class="table table-hover align-middle">
-            <thead class="table-light">
+    <!-- User Table -->
+    <div class="col-lg-8 col-md-7">
+      <div class="form-container">
+        <h5 class="mb-3 text-secondary">User List</h5>
+        <div class="table-responsive">
+          <table class="table-common align-middle">
+            <thead>
               <tr>
                 <th>#</th>
                 <th>User Name</th>
@@ -109,20 +100,25 @@
                 <td>{{ getBranchName(u.branchID) }}</td>
                 <td>{{ getDepartmentName(u.departmentID) }}</td>
                 <td>{{ getRoleName(u.roleID) }}</td>
-
                 <td>
                   <span class="badge" [ngClass]="u.isActive ? 'bg-success' : 'bg-danger'">
                     {{ u.isActive ? 'Active' : 'Inactive' }}
                   </span>
                 </td>
                 <td class="text-center">
-                  <button class="btn btn-sm btn-warning me-1" (click)="editUser(u)">Edit</button>
-                  <button class="btn btn-sm btn-danger" (click)="deleteUser(u)">Delete</button>
+                  <button class="btn btn-sm btn-outline-warning me-1" (click)="editUser(u)" title="Edit">
+                    <i class="bi bi-pencil-fill"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(u)" title="Delete">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
                 </td>
+              </tr>
+              <tr *ngIf="users.length === 0">
+                <td colspan="9" class="text-center text-muted">No users found.</td>
               </tr>
             </tbody>
           </table>
-
         </div>
       </div>
     </div>

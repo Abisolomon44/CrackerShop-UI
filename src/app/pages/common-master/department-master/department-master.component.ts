@@ -4,13 +4,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommonserviceService } from '../../../services/commonservice.service';
 import { Department ,Branch} from '../../models/common-models/companyMaster';
+
+import { SweetAlertService } from '../../../services/properties/sweet-alert.service';
 @Component({
   selector: 'app-department-master',
 
 
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+
   ],
 
   templateUrl: './department-master.component.html',
@@ -22,7 +25,8 @@ export class DepartmentMasterComponent {
   departments: Department[] = [];
   department: Department = this.resetDepartment();
 
-  constructor(private commonservice: CommonserviceService) { }
+  constructor(private commonservice: CommonserviceService,
+              private swallservice: SweetAlertService) { }
 
   ngOnInit(): void {
     this.loadBranches();
@@ -62,13 +66,13 @@ saveDepartment(): void {
 
   this.commonservice.saveDepartment(this.department).subscribe({
     next: res => {
-      alert(`Department ${action} successfully!`);
+      this.swallservice.success("Success", `Department ${action} successfully!`);
       this.department = this.resetDepartment();
       this.loadDepartments();
     },
     error: err => {
       console.error(err);
-      alert('Error: Could not save department.');
+      this.swallservice.error("Error", `Could not save department.`);
     }
   });
 }

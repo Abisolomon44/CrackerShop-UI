@@ -1,56 +1,73 @@
-<div class="master-container">
-  <div class="card master-card p-4">
-    <h2>Role Master</h2>
+<div class="container mt-5">
 
-    <!-- Form -->
-    <form (ngSubmit)="saveOrUpdateRole()" class="mb-4">
-      <div class="row g-3">
-        <div class="col-md-4">
-          <label class="form-label">Role Code</label>
-          <input type="text" [(ngModel)]="role.roleCode" name="roleCode" class="form-control" required>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Role Name</label>
-          <input type="text" [(ngModel)]="role.roleName" name="roleName" class="form-control" required>
-        </div>
-        <div class="col-md-4 d-flex align-items-end">
-          <button type="submit" class="btn btn-primary me-2">
-            {{ role.roleID > 0 ? 'Update' : 'Save' }}
-          </button>
-          <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+  <div class="row g-4">
+    <!-- Role Form -->
+    <div class="col-lg-4 col-md-5">
+      <div class="form-container">
+  <h2 class="mb-4 text-primary fw-bold text-center">Role Master</h2>
+
+        <form >
+
+        
+          <div class="form-column mb-3">
+            <label>Role Name</label>
+            <input type="text" [(ngModel)]="role.roleName" name="roleName" class="form-control" required>
+          </div>
+
+          <div class="form-column mb-3 checkbox-column">
+            <label>
+              <input type="checkbox" [(ngModel)]="role.isActive" name="isActive"> Active
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" (click)="saveOrUpdateRole()">
+              {{ role.roleID > 0 ? 'Update' : 'Save' }}
+            </button>
+            <button type="button" class="btn btn-outline" (click)="resetForm()">Reset</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Role Table -->
+    <div class="col-lg-8 col-md-7">
+      <div class="form-container">
+        <div class="table-responsive">
+          <table class="table-common align-middle">
+            <thead>
+              <tr>
+                <th>Role Code</th>
+                <th>Role Name</th>
+                <th>Status</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of roles">
+                <td>{{ r.roleCode }}</td>
+                <td>{{ r.roleName }}</td>
+                <td>
+                  <span class="badge" [ngClass]="r.isActive ? 'bg-success' : 'bg-danger'">
+                    {{ r.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-outline-warning me-1" (click)="editRole(r)" title="Edit">
+                    <i class="bi bi-pencil-fill"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="deleteRole(r)" title="Delete">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="roles.length === 0">
+                <td colspan="4" class="text-center text-muted">No roles found.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-    </form>
-
-    <!-- Table -->
-    <table class="table table-bordered table-striped table-hover">
-      <thead>
-        <tr>
-          <th>Role Code</th>
-          <th>Role Name</th>
-          <th>Status</th>
-          <th class="text-center" style="width:150px;">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let r of roles">
-          <td>{{ r.roleCode }}</td>
-          <td>{{ r.roleName }}</td>
-          <td>
-            <span class="badge" [class.bg-success]="r.isActive" [class.bg-danger]="!r.isActive">
-              {{ r.isActive ? 'Active' : 'Inactive' }}
-            </span>
-          </td>
-          <td class="text-center">
-            <button class="btn btn-outline-warning" (click)="editRole(r)">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button class="btn btn-outline-danger" (click)="deleteRole(r)">
-              <i class="bi bi-trash"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    </div>
   </div>
 </div>

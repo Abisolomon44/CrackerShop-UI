@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonserviceService } from '../../../services/commonservice.service';
-import { Branch,Company } from '../../models/common-models/companyMaster';
+import { Branch, Company } from '../../models/common-models/companyMaster';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { SweetAlertService } from '../../../services/properties/sweet-alert.service';
+import { FocusOnKeyDirective } from '../../../directives/focus-on-key.directive';
+import { ValidationService } from '../../../services/properties/validation.service';
 
 @Component({
   selector: 'app-branch-master',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FocusOnKeyDirective],
   templateUrl: './branch-master.component.html',
-  styleUrls: ['./branch-master.component.css']
+  styleUrls: ['./branch-master.component.css'],
 })
 export class BranchMasterComponent implements OnInit {
   companies: Company[] = [];
@@ -16,7 +19,11 @@ export class BranchMasterComponent implements OnInit {
 
   branch: Branch = this.getEmptyBranch();
 
-  constructor(private commonservice: CommonserviceService) {}
+  constructor(
+    private commonservice: CommonserviceService,
+    private swallservice: SweetAlertService,
+    private validationService: ValidationService
+  ) {}
 
   ngOnInit(): void {
     this.loadCompanies();
@@ -26,22 +33,22 @@ export class BranchMasterComponent implements OnInit {
   /** Load companies from API */
   loadCompanies() {
     this.commonservice.getCompanies().subscribe({
-      next: res => this.companies = res,
-      error: err => console.error('Error fetching companies:', err)
+      next: (res) => (this.companies = res),
+      error: (err) => console.error('Error fetching companies:', err),
     });
   }
 
   /** Load branches from API */
   loadBranches() {
     this.commonservice.getBranches().subscribe({
-      next: data => this.branches = data,
-      error: err => console.error('Error fetching branches:', err)
+      next: (data) => (this.branches = data),
+      error: (err) => console.error('Error fetching branches:', err),
     });
   }
 
   /** Get company name by ID */
   getCompanyName(companyID: number): string {
-    const company = this.companies.find(c => c.companyID === companyID);
+    const company = this.companies.find((c) => c.companyID === companyID);
     return company ? company.companyName : '';
   }
 
@@ -59,7 +66,7 @@ export class BranchMasterComponent implements OnInit {
       createdAt: new Date().toISOString(),
       updatedByUserID: 0,
       updatedSystemName: 'AngularApp',
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
   }
 
@@ -70,21 +77,27 @@ export class BranchMasterComponent implements OnInit {
 
   /** Save or update branch */
   saveOrDeleteBranch() {
-    if (!this.branch.branchCode || !this.branch.branchName || !this.branch.companyID) {
-      alert("Company, Branch Code and Branch Name are required!");
+    if (!this.branch.branchName || !this.branch.companyID) {
+      this.swallservice.error(
+        'Validation Error',
+        'Company and Branch Name are required!'
+      );
       return;
     }
 
     this.commonservice.saveBranch(this.branch).subscribe({
-      next: id => {
-        alert(this.branch.branchID > 0 ? "Branch updated!" : "Branch created!");
+      next: (id) => {
+        this.swallservice.success(
+          'Success',
+          this.branch.branchID > 0 ? 'Branch updated!' : 'Branch created!'
+        );
         this.loadBranches();
         this.resetBranch();
       },
-      error: err => {
+      error: (err) => {
         console.error('❌ Error saving branch:', err);
-        alert("Error saving branch!");
-      }
+        this.swallservice.error('Error', 'Error saving branch!');
+      },
     });
   }
 
@@ -100,15 +113,13 @@ export class BranchMasterComponent implements OnInit {
     b.isActive = false;
     this.commonservice.saveBranch(b).subscribe({
       next: () => {
-        alert("Branch deleted successfully!");
+        this.swallservice.success('Success', 'Branch deleted successfully!');
         this.loadBranches();
       },
-      error: err => {
-        console.error('❌ Error deleting branch:', err);
-        alert("Error deleting branch!");
-      }
+      error: (err) => {
+        console.error('Error deleting branch:', err);
+        this.swallservice.error('Error', 'Error deleting branch!');
+      },
     });
   }
-
-
 }
