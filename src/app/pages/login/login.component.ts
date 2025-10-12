@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { userInfo } from 'node:os';
 import { CommonserviceService } from '../../services/commonservice.service';
+import { SweetAlertService } from '../../services/properties/sweet-alert.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -27,7 +28,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private commonService: CommonserviceService
+    private commonService: CommonserviceService,
+      private sweetAlert: SweetAlertService 
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -41,7 +43,7 @@ export class LoginComponent {
     this.commonService.getUsers().subscribe({
       next: (res) => (this.users = res),
       error: (err) => {
-        console.error('❌ Error loading users:', err);
+        console.error('Error loading users:', err);
         alert('Error loading user list.');
       },
     });
@@ -49,9 +51,6 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       const { username, password } = this.loginForm.value;
-
-      // ✅ Hardcoded developer/admin login
-      // ✅ Hardcoded developer/admin login
       if (username === 'admin' && password === '123') {
         localStorage.setItem('userId', '0'); // dummy ID
         localStorage.setItem('userName', 'admin');
@@ -61,7 +60,6 @@ export class LoginComponent {
         return;
       }
 
-      // Normal database login
       const matchedUser = this.users.find(
         (u) => u.userName === username && u.passwordHash === password
       );
@@ -70,7 +68,7 @@ export class LoginComponent {
         localStorage.setItem('userId', matchedUser.userID.toString());
         localStorage.setItem('userName', matchedUser.userName);
         localStorage.setItem('role', 'client');
-        alert(`Login successful 🎉 Welcome ${matchedUser.userName}`);
+        alert(`Login successful  Welcome ${matchedUser.userName}`);
         this.router.navigate(['/default']);
       } else {
         this.errorMessage = 'Invalid username or password';

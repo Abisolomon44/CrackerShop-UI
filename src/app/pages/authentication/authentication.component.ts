@@ -60,7 +60,6 @@ export class AuthenticationComponent {
     this.service.getAllModules().subscribe(
       res => {
         this.modules = res;
-        // Initialize maps
         res.forEach(m => {
           if (!(m.moduleID in this.selectedModulesMap)) this.selectedModulesMap[m.moduleID] = false;
           if (!(m.moduleID in this.permissionNameMap)) this.permissionNameMap[m.moduleID] = '';
@@ -71,7 +70,6 @@ export class AuthenticationComponent {
     );
   }
 
-  // Mark checkboxes based on existing permissions
 private markSelectedModules() {
   if (!this.permissions.length) return;
   this.modules.forEach(m => {
@@ -88,7 +86,6 @@ private markSelectedModules() {
       return;
     }
     this.service.savePermission(permission).subscribe(() => {
-      // Optional: toast or alert
     });
   }
 
@@ -106,7 +103,6 @@ private markSelectedModules() {
     return;
   }
 
-  // Collect selected module IDs
   const selectedModuleIDs = Object.keys(this.selectedModulesMap)
     .filter(id => this.selectedModulesMap[+id])
     .map(id => +id);
@@ -116,7 +112,6 @@ private markSelectedModules() {
     return;
   }
 
-  // Prepare payload
   const permission: UserPermission = {
     id: 0, // new record
     userID: this.selectedUserId || 0,
@@ -126,7 +121,6 @@ private markSelectedModules() {
     updatedAt: new Date().toISOString(),
   };
 
-  // Single API call
   this.savePermission(permission);
 
   alert('Selected modules saved successfully.');
@@ -134,7 +128,6 @@ private markSelectedModules() {
   else if (this.selectedRoleId) this.loadPermissionsForRole();
 }
 
-  // Check if any module is selected
   hasSelectedModules(): boolean {
     return Object.values(this.selectedModulesMap).some(v => v);
   }
