@@ -18,7 +18,7 @@ import { SupplierComponent } from './pages/master/supplier/supplier.component';
 import { TaxComponent } from './pages/master/tax/tax.component';
 import { UnitComponent } from './pages/master/unit/unit.component';
 import { MasterDashboardComponent } from './pages/master/master-dashboard/master-dashboard.component';
-
+import { CessComponent } from './pages/master/cess/cess.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -52,6 +52,8 @@ export const routes: Routes = [
   children: [
     { path: 'brand', component: BrandComponent },
     { path: 'category', component: CategoryComponent },
+    { path: 'cess', component: CessComponent },
+
     { path: 'customer', component: CustomerComponent },
     { path: 'hsnCode', component: HsnCodeComponent },
     { path: 'Product', component: ProductComponent },

@@ -30,7 +30,6 @@ export class TaxComponent {
 
   ngOnInit() { this.loadTaxes(); }
 
-  /** New empty tax */
   private newTax(): Tax {
     const now = new Date().toISOString();
     return {

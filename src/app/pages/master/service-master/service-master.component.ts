@@ -106,6 +106,9 @@ export class ServiceMasterComponent {
       .getHSNCodes()
       .subscribe((res) => (this.hsnCodes = res ?? []));
     this.masterService.getTaxes().subscribe((res) => (this.taxes = res ?? []));
+    this.masterService
+      .getCesses()
+      .subscribe((res) => (this.cesses = res ?? []));
   }
 
   checkDuplicate() {
@@ -254,9 +257,8 @@ export class ServiceMasterComponent {
     return this.cesses?.find((c) => c.cessID === cessID)?.cessName || '';
   }
   getTaxName(taxID: number): string {
-  if (!this.taxes) return '';
-  const tax = this.taxes.find(t => t.taxID === taxID);
-  return tax ? tax.taxName : '';
-}
-
+    if (!this.taxes) return '';
+    const tax = this.taxes.find((t) => t.taxID === taxID);
+    return tax ? tax.taxName : '';
+  }
 }

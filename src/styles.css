@@ -465,3 +465,55 @@ label.required {
 }
 
 
+/* ===== Form Row with Four Inputs ===== */
+.form-row-four {
+  display: flex;
+  gap: 20px;          /* space between columns */
+  flex-wrap: wrap;     /* wrap on smaller screens */
+  margin-bottom: 20px;
+}
+
+.form-row-four .form-column {
+  flex: 1 1 calc(25% - 15px); /* four equal columns with some gap adjustment */
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: var(--border-radius, 8px);
+  background-color: var(--color-bg-white, #fff);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.form-row-four .form-column label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #495057;
+}
+
+.form-row-four .form-column input,
+.form-row-four .form-column select,
+.form-row-four .form-column textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: var(--border-radius, 8px);
+  font-size: 0.95rem;
+  background-color: var(--color-bg-white, #fff);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-row-four .form-column input:focus,
+.form-row-four .form-column select:focus,
+.form-row-four .form-column textarea:focus {
+  border-color: var(--color-primary, #065c6c);
+  box-shadow: 0 0 6px rgba(6, 92, 108, 0.3);
+  outline: none;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 991px) {
+  .form-row-four {
+    flex-direction: column;
+  }
+  .form-row-four .form-column {
+    flex: 1 1 100%;
+  }
+}

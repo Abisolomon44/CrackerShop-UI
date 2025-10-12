@@ -32,6 +32,8 @@ export const NAV_ITEMS: NavItem[] = [
   children: [
     { label: 'Brand', route: '/CommonProduct/brand' },
     { label: 'Category', route: '/CommonProduct/category' },
+    { label: 'Cess', route: '/CommonProduct/cess' },
+
     { label: 'Customer Master', route: '/CommonProduct/customer' },
     { label: 'HSN Code', route: '/CommonProduct/hsnCode' },
     { label: 'Product  Master', route: '/CommonProduct/Product' },

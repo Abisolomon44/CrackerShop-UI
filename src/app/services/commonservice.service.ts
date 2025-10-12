@@ -107,5 +107,10 @@ export class CommonserviceService {
   /** Optional: check if user is admin */
   isAdmin(): boolean {
     return this.getCurrentUserRole().toLowerCase() === 'admin';
+ 
+ 
+  
   }
+
+  
 }

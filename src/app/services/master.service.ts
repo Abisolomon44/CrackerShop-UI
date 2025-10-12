@@ -52,6 +52,10 @@ export class MasterService {
   getProducts(companyId: number): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.baseUrl}/Products/${companyId}`);
   }
+  getallProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.baseUrl}/GetProducts`);
+  }
+
 
   saveProduct(product: Product): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/Product`, product);
@@ -112,4 +116,19 @@ export class MasterService {
   saveSubCategory(subCategory: SubCategory): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/SubCategory`, subCategory);
   }
+
+   /** Get current user info */
+  getCurrentUserId(): number {
+    const userId = localStorage.getItem('userId');
+    return userId ? Number(userId) : 0;
+  }
+
+  getCurrentUserRole(): string {
+    return localStorage.getItem('role') || '';
+  }
+
+  isAdmin(): boolean {
+    return this.getCurrentUserRole().toLowerCase() === 'admin';
+  }
+
 }
