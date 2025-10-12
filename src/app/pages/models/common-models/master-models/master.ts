@@ -176,3 +176,17 @@ export interface SubCategory {
   updatedSystemName: string;
   updatedAt: string;
 }
+
+export interface Cess {
+  cessID: number;
+  cessName: string;
+  cessRate: number;
+  description?: string;
+  isActive: boolean;
+  createdByUserID: number;
+  createdSystemName: string;
+  createdAt: string; // or Date if you want to parse it
+  updatedByUserID?: number | null;
+  updatedSystemName?: string | null;
+  updatedAt?: string | null; // or Date
+}

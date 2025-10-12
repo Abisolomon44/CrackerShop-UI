@@ -15,7 +15,6 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./default-aside.component.css'],
 })
 export class DefaultAsideComponent {
-  colors = Colors;
   navItems: NavItem[] = [];
 
   constructor(private commonService: CommonserviceService) {}

@@ -5,30 +5,35 @@ import { MasterService } from '../../../services/master.service';
 import { ValidationService } from '../../../services/properties/validation.service';
 import { SweetAlertService } from '../../../services/properties/sweet-alert.service';
 import { FocusOnKeyDirective } from '../../../directives/focus-on-key.directive';
-import { Observable } from 'rxjs';
+import { InputRestrictDirective } from '../../../directives/input-restrict.directive';
 import { Customer } from '../../models/common-models/master-models/master';
+import { CommonserviceService } from '../../../services/commonservice.service';
 
 interface ApiResponse { success: boolean; message?: string; }
 
 @Component({
   selector: 'app-customer',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, InputRestrictDirective, FocusOnKeyDirective],
   templateUrl: './customer.component.html',
   styleUrls: ['./customer.component.css']
 })
 export class CustomerComponent {
   customers: Customer[] = [];
-  customer: Customer = this.newCustomer();
+  customer!: Customer;  
   duplicateError = false;
 
   constructor(
     private readonly masterService: MasterService,
     private readonly validationService: ValidationService,
+    private readonly commonService: CommonserviceService,
     private readonly swall: SweetAlertService
   ) {}
 
-  ngOnInit() { this.loadCustomers(); }
+  ngOnInit() {
+    this.resetCustomer();
+    this.loadCustomers();
+  }
 
   private newCustomer(): Customer {
     const now = new Date().toISOString();
@@ -46,18 +51,18 @@ export class CustomerComponent {
       country: '',
       postalCode: '',
       isActive: true,
-      createdByUserID: 0,
+      createdByUserID: this.commonService.getCurrentUserId(),
       createdSystemName: 'AngularApp',
       createdAt: now,
-      updatedByUserID: 0,
+      updatedByUserID: this.commonService.getCurrentUserId(),
       updatedSystemName: 'AngularApp',
       updatedAt: now
     };
   }
 
-  private focusCustomer() {
+  private focusCustomer(targetId: string = 'customerName') {
     setTimeout(() => {
-      const el = document.getElementById('customerCode') as HTMLInputElement | null;
+      const el = document.getElementById(targetId) as HTMLInputElement | null;
       el?.focus();
       el?.select();
     }, 0);
@@ -72,32 +77,46 @@ export class CustomerComponent {
 
   checkDuplicate() {
     this.duplicateError = this.validationService.isDuplicate(
-      this.customer.customerCode, this.customers, 'customerCode', this.customer.customerID
+      this.customer.customerName?.trim(), 
+      this.customers,
+      'customerName',
+      this.customer.customerID
     );
   }
 
   private validateCustomer(): boolean {
-    this.customer.customerCode = this.customer.customerCode?.trim() || '';
     this.customer.customerName = this.customer.customerName?.trim() || '';
     this.checkDuplicate();
-
-    if (!this.customer.customerCode) { 
-      this.swall.warning('Validation', 'Customer Code is required!', () => this.focusCustomer()); 
-      return false; 
-    }
     if (!this.customer.customerName) { 
-      this.swall.warning('Validation', 'Customer Name is required!', () => this.focusCustomer()); 
+      this.swall.warning('Validation', 'Customer Name is required!', () => this.focusCustomer('customerName')); 
       return false; 
     }
+
     if (this.duplicateError) { 
-      this.swall.warning('Validation', 'Customer Code already exists!', () => this.focusCustomer()); 
+      this.swall.warning('Validation', 'Customer Name already exists!', () => this.focusCustomer('customerName')); 
       return false; 
     }
+
     return true;
   }
 
   saveOrUpdateCustomer() {
     if (!this.validateCustomer()) return;
+
+    const now = new Date().toISOString();
+    if (this.customer.customerID && this.customer.customerID > 0) {
+      this.customer.updatedByUserID = this.commonService.getCurrentUserId();
+      this.customer.updatedSystemName = 'AngularApp';
+      this.customer.updatedAt = now;
+    } else {
+      this.customer.createdByUserID = this.commonService.getCurrentUserId();
+      this.customer.createdSystemName = 'AngularApp';
+      this.customer.createdAt = now;
+      this.customer.updatedByUserID = this.commonService.getCurrentUserId();
+      this.customer.updatedSystemName = 'AngularApp';
+      this.customer.updatedAt = now;
+    }
+
     this.masterService.saveCustomer(this.customer).subscribe({
       next: (res: ApiResponse) => {
         if (res.success) {
@@ -120,7 +139,15 @@ export class CustomerComponent {
   deleteCustomer(c: Customer) {
     this.swall.confirm(`Delete ${c.customerName}?`, 'This will mark the customer as inactive.').then(result => {
       if (!result.isConfirmed) return;
-      const deleted: Customer = { ...c, isActive: false };
+
+      const deleted: Customer = { 
+        ...c, 
+        isActive: false, 
+        updatedByUserID: this.commonService.getCurrentUserId(), 
+        updatedSystemName: 'AngularApp', 
+        updatedAt: new Date().toISOString() 
+      };
+
       this.masterService.saveCustomer(deleted).subscribe({
         next: (res: ApiResponse) => {
           if (res.success) {

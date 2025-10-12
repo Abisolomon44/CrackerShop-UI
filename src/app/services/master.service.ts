@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../config';
 import { HttpClient } from '@angular/common/http';  
 import { Observable } from 'rxjs';
-import { Brand, Category, Customer, Product, Supplier, Tax, Unit, HSN, Service, SubCategory } from './../pages/models/common-models/master-models/master';
+import { Brand, Category, Customer, Cess,Product, Supplier, Tax, Unit, HSN, Service, SubCategory } from './../pages/models/common-models/master-models/master';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +30,15 @@ export class MasterService {
     return this.http.post<any>(`${this.baseUrl}/Category`, category);
   }
 
+   // GET all active Cess
+  getCesses(): Observable<Cess[]> {
+    return this.http.get<Cess[]>(`${this.baseUrl}/Cesses`);
+  }
+
+  // POST add/update Cess
+  saveCess(cess: Cess): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/Cess`, cess);
+  }
   // ================= Customer =================
   getCustomers(): Observable<Customer[]> {
     return this.http.get<Customer[]>(`${this.baseUrl}/Customers`);
@@ -84,7 +93,7 @@ export class MasterService {
     return this.http.post<any>(`${this.baseUrl}/HSNCode`, hsn);
   }
 
-  // ================= Service =================
+  // ================= Service =================A
   getServices(): Observable<Service[]> {
     return this.http.get<Service[]>(`${this.baseUrl}/Services`);
   }

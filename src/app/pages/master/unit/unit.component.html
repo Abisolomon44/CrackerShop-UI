@@ -16,6 +16,7 @@
               [(ngModel)]="unit.unitName"
               name="unitName"
               required
+              [autoFocus]="true"
               (ngModelChange)="checkDuplicate()"
               appFocusOnKey="unitCode"
               [ngClass]="{ 'is-warning': duplicateError }"

@@ -393,3 +393,75 @@ label.required {
     width: 200px;
   }
 }
+
+/* ===== Single Row Form Column ===== */
+.form-column-single-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+/* ===== Single Row with Three Inputs ===== */
+.form-row-three {
+  display: flex;
+  gap: 20px; /* space between input cards */
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+/* ===== Each input column card ===== */
+.form-row-three .form-column {
+  flex: 1 1 30%; /* three equal columns */
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+/*
+/* Labels */
+.form-row-three .form-column label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #495057;
+}
+
+/* Inputs inside card */
+.form-row-three .form-column input,
+.form-row-three .form-column select,
+.form-row-three .form-column textarea {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  background-color: #fefefe;
+}
+
+/* Focus effect */
+.form-row-three .form-column input:focus,
+.form-row-three .form-column select:focus,
+.form-row-three .form-column textarea:focus {
+  border-color: #065c6c;
+  box-shadow: 0 0 8px rgba(6, 92, 108, 0.3);
+  outline: none;
+}
+
+
+
+/* Responsive */
+@media (max-width: 991px) {
+  .form-row-three {
+    flex-direction: column;
+  }
+  .form-row-three .form-column {
+    flex: 1 1 100%;
+  }
+}
+
+

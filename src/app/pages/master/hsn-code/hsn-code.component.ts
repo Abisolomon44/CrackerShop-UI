@@ -7,7 +7,7 @@ import { SweetAlertService } from '../../../services/properties/sweet-alert.serv
 import { FocusOnKeyDirective } from '../../../directives/focus-on-key.directive';
 import { Observable } from 'rxjs';
 
-import { HSN } from '../../models/common-models/master-models/master';
+import { HSN,Tax} from '../../models/common-models/master-models/master';
 interface ApiResponse {
   success: boolean;
   message?: string;
@@ -21,8 +21,9 @@ interface ApiResponse {
   styleUrls: ['./hsn-code.component.css'],
 })
 export class HsnCodeComponent {
-   hsns: HSN[] = [];
+    hsns: HSN[] = [];
   hsn: HSN = this.newHSN();
+  taxes: Tax[] = [];
   private currentUserId: number;
 
   constructor(
@@ -32,7 +33,10 @@ export class HsnCodeComponent {
     this.currentUserId = Number(localStorage.getItem('userId')) || 0;
   }
 
-  ngOnInit() { this.loadHSNCodes(); }
+  ngOnInit() {
+    this.loadHSNCodes();
+    this.loadTaxes();
+  }
 
   private newHSN(): HSN {
     const now = new Date().toISOString();
@@ -53,34 +57,10 @@ export class HsnCodeComponent {
 
   private focusHSN() {
     setTimeout(() => {
-      const el = document.getElementById('description') as HTMLInputElement | null;
+      const el = document.getElementById('hsnCode') as HTMLInputElement | null;
       el?.focus();
       el?.select();
     }, 0);
-  }
-
-  private prepareHSN(): HSN {
-    const now = new Date().toISOString();
-    return {
-      ...this.hsn,
-      hsnCode: this.hsn.description,
-      createdByUserID: this.hsn.hsnid ? this.hsn.createdByUserID : this.currentUserId,
-      updatedByUserID: this.currentUserId,
-      createdAt: this.hsn.createdAt || now,
-      updatedAt: now,
-      createdSystemName: 'AngularApp',
-      updatedSystemName: 'AngularApp',
-      taxID: this.hsn.taxID || 1
-    };
-  }
-
-  private validateHSN(): boolean {
-    this.hsn.description = this.hsn.description?.trim() || '';
-    if (!this.hsn.description) {
-      this.swall.warning('Validation', 'HSN Name is required!', () => this.focusHSN());
-      return false;
-    }
-    return true;
   }
 
   loadHSNCodes() {
@@ -90,9 +70,45 @@ export class HsnCodeComponent {
     });
   }
 
+  loadTaxes() {
+    this.masterService.getTaxes().subscribe({
+      next: res => this.taxes = res ?? [],
+      error: () => this.swall.error('Error', 'Failed to load Taxes!')
+    });
+  }
+
+  private validateHSN(): boolean {
+    this.hsn.hsnCode = this.hsn.hsnCode?.trim() || '';
+    this.hsn.description = this.hsn.description?.trim() || '';
+    if (!this.hsn.hsnCode) {
+      this.swall.warning('Validation', 'HSN Code is required!', () => this.focusHSN());
+      return false;
+    }
+    if (!this.hsn.description) {
+      this.swall.warning('Validation', 'HSN Name is required!', () => this.focusHSN());
+      return false;
+    }
+    if (!this.hsn.taxID || this.hsn.taxID === 0) {
+      this.swall.warning('Validation', 'Select a Tax!', () => this.focusHSN());
+      return false;
+    }
+    return true;
+  }
+
   saveOrUpdateHSN() {
     if (!this.validateHSN()) return;
-    const payload = this.prepareHSN();
+
+    const now = new Date().toISOString();
+    const payload: HSN = {
+      ...this.hsn,
+      createdByUserID: this.hsn.hsnid ? this.hsn.createdByUserID : this.currentUserId,
+      updatedByUserID: this.currentUserId,
+      createdAt: this.hsn.createdAt || now,
+      updatedAt: now,
+      createdSystemName: 'AngularApp',
+      updatedSystemName: 'AngularApp'
+    };
+
     this.masterService.saveHSNCode(payload).subscribe({
       next: (res: ApiResponse) => {
         if (res.success) {
@@ -126,4 +142,9 @@ export class HsnCodeComponent {
   }
 
   resetHSN() { this.hsn = this.newHSN(); this.focusHSN(); }
+  getTaxName(taxID: number): string {
+  const tax = this.taxes.find(t => t.taxID === taxID);
+  return tax ? tax.taxName : '-';
+}
+
 }
