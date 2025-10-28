@@ -1,396 +1,169 @@
-<div class="container mt-5">
-  <!-- Product Form -->
-  <div class="row g-4">
-    <div class="col-12">
-      <div class="form-container p-4 rounded shadow-sm bg-light">
-        <h2>Product Master</h2>
-        <form #productForm="ngForm">
-          <!-- Row 1: Company, Product Name, Product Code, Category -->
-          <div class="form-row-four mt-2">
-            <div class="form-column">
-              <label for="companyID" class="form-label">Company</label>
-              <select
-                id="companyID"
-                class="form-select"
-                [(ngModel)]="product.companyID"
-                name="companyID"
-                (change)="loadProducts()"
-                appFocusOnKey
-                targetId="productName"
-              >
-                <option [ngValue]="0">--Select--</option>
-                <option *ngFor="let c of companies" [ngValue]="c.companyID">
-                  {{ c.companyName }}
-                </option>
-              </select>
-            </div>
 
-            <div class="form-column">
-              <label for="productName" class="form-label required"
-                >Product Name</label
-              >
-              <input
-                type="text"
-                id="productName"
-                class="form-control"
-                [(ngModel)]="product.productName"
-                name="productName"
-                required
-                appInputRestrict="letter"
-                appFocusOnKey
-                targetId="productCode"
-                (ngModelChange)="checkDuplicate()"
-              />
-              <small *ngIf="duplicateError" class="text-danger"
-                >Product Name already exists!</small
-              >
-            </div>
 
-            <div class="form-column">
-              <label for="productCode" class="form-label">Product Code</label>
-              <input
-                type="text"
-                id="productCode"
-                class="form-control"
-                [(ngModel)]="product.productCode"
-                name="productCode"
-                readonly
-                appFocusOnKey
-                targetId="categoryID"
-              />
-            </div>
+  <!-- =========================
+       Add New Products Inline (Grid Rows)
+  ========================== 
+  <div class="input-grid-responsive mb-4">
+    <table class="table input-grid table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>Company</th>
+          <th>Product Name</th>
+          <th>Code</th>
+          <th>Category</th>
+          <th>SubCategory</th>
+          <th>Brand</th>
+          <th>Unit</th>
+          <th>HSN</th>
+          <th>Purchase</th>
+          <th>Retail</th>
+          <th>Wholesale</th>
+          <th>Sale</th>
+          <th>MRP</th>
+          <th>Discount</th>
+          <th>Stock</th>
+          <th>Status</th>
+          <th class="text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+       
+        <tr *ngFor="let p of newProducts; let i = index">
+          <td>New</td>
+          <td>
+            <select class="form-select form-select-sm" [(ngModel)]="p.companyID">
+              <option [ngValue]="0">--Select--</option>
+              <option *ngFor="let c of companies" [ngValue]="c.companyID">{{ c.companyName }}</option>
+            </select>
+          </td>
+          <td><input type="text" class="form-control form-control-sm" [(ngModel)]="p.productName" /></td>
+          <td><input type="text" class="form-control form-control-sm" [(ngModel)]="p.productCode" readonly /></td>
+          <td>
+            <select class="form-select form-select-sm" [(ngModel)]="p.categoryID">
+              <option [ngValue]="0">--Select--</option>
+              <option *ngFor="let c of categories" [ngValue]="c.categoryID">{{ c.categoryName }}</option>
+            </select>
+          </td>
+          <td>
+            <select class="form-select form-select-sm" [(ngModel)]="p.subCategoryID">
+              <option [ngValue]="0">--Select--</option>
+              <option *ngFor="let sc of subCategories" [ngValue]="sc.subCategoryID">{{ sc.subCategoryName }}</option>
+            </select>
+          </td>
+          <td>
+            <select class="form-select form-select-sm" [(ngModel)]="p.brandID">
+              <option [ngValue]="0">--Select--</option>
+              <option *ngFor="let b of brands" [ngValue]="b.brandID">{{ b.brandName }}</option>
+            </select>
+          </td>
+          <td>
+            <select class="form-select form-select-sm" [(ngModel)]="p.unitID">
+              <option [ngValue]="0">--Select--</option>
+              <option *ngFor="let u of units" [ngValue]="u.unitID">{{ u.unitName }}</option>
+            </select>
+          </td>
+          <td>
+            <select class="form-select form-select-sm" [(ngModel)]="p.hsnid">
+              <option [ngValue]="0">--Select--</option>
+              <option *ngFor="let h of hsnCodes" [ngValue]="h.hsnid">{{ h.hsnCode }}</option>
+            </select>
+          </td>
+          <td><input type="number" class="form-control form-control-sm" [(ngModel)]="p.purchaseRate" /></td>
+          <td><input type="number" class="form-control form-control-sm" [(ngModel)]="p.retailPrice" /></td>
+          <td><input type="number" class="form-control form-control-sm" [(ngModel)]="p.wholesalePrice" /></td>
+          <td><input type="number" class="form-control form-control-sm" [(ngModel)]="p.saleRate" /></td>
+          <td><input type="number" class="form-control form-control-sm" [(ngModel)]="p.mrp" /></td>
+          <td><input type="number" class="form-control form-control-sm" [(ngModel)]="p.discountAmount" /></td>
+          <td><input type="number" class="form-control form-control-sm" [(ngModel)]="p.currentStock" /></td>
+          <td>
+            <select class="form-select form-select-sm" [(ngModel)]="p.isActive">
+              <option [ngValue]="true">Active</option>
+              <option [ngValue]="false">Inactive</option>
+            </select>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-success" (click)="saveOrUpdateProduct(p)">Save</button>
+            <button class="btn btn-sm btn-danger ms-1" (click)="removeNewRow(i)">Remove</button>
+          </td>
+        </tr>
 
-            <div class="form-column">
-              <label for="categoryID" class="form-label">Category</label>
-              <select
-                id="categoryID"
-                class="form-select"
-                [(ngModel)]="product.categoryID"
-                name="categoryID"
-                appFocusOnKey
-                targetId="subCategoryID"
-              >
-                <option [ngValue]="0">--Select--</option>
-                <option *ngFor="let c of categories" [ngValue]="c.categoryID">
-                  {{ c.categoryName }}
-                </option>
-              </select>
-            </div>
-          </div>
+        <tr *ngIf="newProducts.length === 0">
+          <td colspan="18" class="text-center text-muted">Click "+ Add Row" to add a new product.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-          <!-- Row 2: SubCategory, Brand, Unit, HSN -->
-          <div class="form-row-four mt-2">
-            <div class="form-column">
-              <label for="subCategoryID" class="form-label">SubCategory</label>
-              <select
-                id="subCategoryID"
-                class="form-select"
-                [(ngModel)]="product.subCategoryID"
-                name="subCategoryID"
-                appFocusOnKey
-                targetId="brandID"
-              >
-                <option [ngValue]="0">--Select--</option>
-                <option
-                  *ngFor="let sc of subCategories"
-                  [ngValue]="sc.subCategoryID"
-                >
-                  {{ sc.subCategoryName }}
-                </option>
-              </select>
-            </div>
 
-            <div class="form-column">
-              <label for="brandID" class="form-label">Brand</label>
-              <select
-                id="brandID"
-                class="form-select"
-                [(ngModel)]="product.brandID"
-                name="brandID"
-                appFocusOnKey
-                targetId="unitID"
-              >
-                <option [ngValue]="0">--Select--</option>
-                <option *ngFor="let b of brands" [ngValue]="b.brandID">
-                  {{ b.brandName }}
-                </option>
-              </select>
-            </div>
+  <div class="product-list-container mt-4">
+    <h4>Existing Products</h4>
+    <div class="input-grid-responsive">
+      <table class="table input-grid table-bordered table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Company</th>
+            <th>Product Name</th>
+            <th>Code</th>
+            <th>Category</th>
+            <th>SubCategory</th>
+            <th>Brand</th>
+            <th>Unit</th>
+            <th>HSN</th>
+            <th>Purchase</th>
+            <th>Retail</th>
+            <th>Wholesale</th>
+            <th>Sale</th>
+            <th>MRP</th>
+            <th>Discount</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of products; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ getCompanyName(p.companyID) }}</td>
+            <td>{{ p.productName }}</td>
+            <td>{{ p.productCode }}</td>
+            <td>{{ getCategoryName(p.categoryID) }}</td>
+            <td>{{ getSubCategoryName(p.subCategoryID) }}</td>
+            <td>{{ getBrandName(p.brandID) }}</td>
+            <td>{{ getUnitName(p.unitID) }}</td>
+            <td>{{ getHSNCode(p.hsnid) }}</td>
+            <td>{{ p.purchaseRate | number:'1.2-2' }}</td>
+            <td>{{ p.retailPrice | number:'1.2-2' }}</td>
+            <td>{{ p.wholesalePrice | number:'1.2-2' }}</td>
+            <td>{{ p.saleRate | number:'1.2-2' }}</td>
+            <td>{{ p.mrp | number:'1.2-2' }}</td>
+            <td>{{ p.discountAmount | number:'1.2-2' }}</td>
+            <td>{{ p.currentStock }}</td>
+            <td>{{ p.isActive ? 'Active' : 'Inactive' }}</td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-warning me-1" (click)="editProduct(p)">Edit</button>
+              <button class="btn btn-sm btn-danger" (click)="deleteProduct(p)">Delete</button>
+            </td>
+          </tr>
 
-            <div class="form-column">
-              <label for="unitID" class="form-label">Unit</label>
-              <select
-                id="unitID"
-                class="form-select"
-                [(ngModel)]="product.unitID"
-                name="unitID"
-                appFocusOnKey
-                targetId="hsnid"
-              >
-                <option [ngValue]="0">--Select--</option>
-                <option *ngFor="let u of units" [ngValue]="u.unitID">
-                  {{ u.unitName }}
-                </option>
-              </select>
-            </div>
-
-            <div class="form-column">
-              <label for="hsnid" class="form-label">HSN</label>
-              <select
-                id="hsnid"
-                class="form-select"
-                [(ngModel)]="product.hsnid"
-                name="hsnid"
-                appFocusOnKey
-                targetId="taxID"
-              >
-                <option [ngValue]="0">--Select--</option>
-                <option *ngFor="let h of hsnCodes" [ngValue]="h.hsnid">
-                  {{ h.hsnCode }}
-                </option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Row 3: Tax, Cess, Retail, MRP -->
-          <div class="form-row-four mt-2">
-            <div class="form-column">
-              <label for="taxID" class="form-label">Tax</label>
-              <select
-                id="taxID"
-                class="form-select"
-                [(ngModel)]="product.taxID"
-                name="taxID"
-                appFocusOnKey
-                targetId="cessID"
-              >
-                <option [ngValue]="0">--Select--</option>
-                <option *ngFor="let t of taxes" [ngValue]="t.taxID">
-                  {{ t.taxName }}
-                </option>
-              </select>
-            </div>
-
-            <div class="form-column">
-              <label for="cessID" class="form-label">Cess</label>
-              <select
-                id="cessID"
-                class="form-select"
-                [(ngModel)]="product.cessID"
-                name="cessID"
-                appFocusOnKey
-                targetId="purchaseRate"
-              >
-                <option [ngValue]="0">--Select--</option>
-                <option *ngFor="let c of cesses" [ngValue]="c.cessID">
-                  {{ c.cessName }}
-                </option>
-              </select>
-            </div>
-
-            <div class="form-column">
-              <label for="retailPrice" class="form-label">Retail Price</label>
-              <input
-                type="number"
-                id="retailPrice"
-                class="form-control"
-                [(ngModel)]="product.retailPrice"
-                name="retailPrice"
-                appFocusOnKey
-                targetId="mrp"
-              />
-            </div>
-
-            <div class="form-column">
-              <label for="mrp" class="form-label">MRP</label>
-              <input
-                type="number"
-                id="mrp"
-                class="form-control"
-                [(ngModel)]="product.mrp"
-                name="mrp"
-                appFocusOnKey
-                targetId="purchaseRate"
-              />
-            </div>
-          </div>
-
-          <!-- Row 4: Purchase, Wholesale, Sale, Discount Amount -->
-          <div class="form-row-four mt-2">
-            <div class="form-column">
-              <label for="purchaseRate" class="form-label">Purchase Rate</label>
-              <input
-                type="number"
-                id="purchaseRate"
-                class="form-control"
-                [(ngModel)]="product.purchaseRate"
-                name="purchaseRate"
-                appFocusOnKey
-                targetId="wholesalePrice"
-              />
-            </div>
-
-            <div class="form-column">
-              <label for="wholesalePrice" class="form-label"
-                >Wholesale Price</label
-              >
-              <input
-                type="number"
-                id="wholesalePrice"
-                class="form-control"
-                [(ngModel)]="product.wholesalePrice"
-                name="wholesalePrice"
-                appFocusOnKey
-                targetId="saleRate"
-              />
-            </div>
-
-            <div class="form-column">
-              <label for="saleRate" class="form-label">Sale Rate</label>
-              <input
-                type="number"
-                id="saleRate"
-                class="form-control"
-                [(ngModel)]="product.saleRate"
-                name="saleRate"
-                appFocusOnKey
-                targetId="discountAmount"
-              />
-            </div>
-
-            <div class="form-column">
-              <label for="discountAmount" class="form-label"
-                >Discount Amount</label
-              >
-              <input
-                type="number"
-                id="discountAmount"
-                class="form-control"
-                [(ngModel)]="product.discountAmount"
-                name="discountAmount"
-                appFocusOnKey
-                targetId="discountPercentage"
-              />
-            </div>
-          </div>
-
-       <!-- Action Buttons -->
-<div class="d-flex justify-content-end gap-2 mt-3 flex-wrap">
-
-  <!-- Save / Update -->
-  <button type="button" class="btn btn-primary d-flex align-items-center px-4 py-2"
-          (click)="saveOrUpdateProduct()">
-    <i class="bi bi-check-circle me-2"></i>
-    {{ product.productID > 0 ? 'Update' : 'Save' }}
-  </button>
-
-  <!-- Delete -->
-  <button type="button" class="btn btn-danger d-flex align-items-center px-4 py-2"
-          [disabled]="!product.productID || product.productID === 0"
-          (click)="deleteProduct(product)">
-    <i class="bi bi-trash me-2"></i>
-    Delete
-  </button>
-
-  <!-- Reset -->
-  <button type="button" class="btn btn-secondary d-flex align-items-center px-4 py-2"
-          (click)="resetProduct()">
-    <i class="bi bi-arrow-counterclockwise me-2"></i>
-    Reset
-  </button>
-
+          <tr *ngIf="products.length === 0">
+            <td colspan="18" class="text-center text-muted">No products available.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
+-->
 
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Product Table -->
-  <div class="row mt-4">
-    <div class="col-12">
-      <div class="table-container">
-        <table class="table-common">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Code</th>
-              <th>Name</th>
-              <th>Company</th>
-              <th>Category</th>
-              <th>SubCategory</th>
-              <th>Brand</th>
-              <th>HSN</th>
-              <th>Tax</th>
-              <th>Cess</th>
-              <th>Retail</th>
-              <th>MRP</th>
-              <th>Purchase</th>
-              <th>Wholesale</th>
-              <th>Sale</th>
-              <th>Disc Amt</th>
-              <th>Disc %</th>
-              <th>Opening</th>
-              <th>Reorder</th>
-              <th>Current</th>
-              <th>Barcode</th>
-              <th>Status</th>
-              <th class="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let p of products; let i = index">
-              <td>{{ i + 1 }}</td>
-              <td>{{ p.productCode }}</td>
-              <td>{{ p.productName }}</td>
-              <td>{{ getCompanyName(p.companyID) }}</td>
-              <td>{{ getCategoryName(p.categoryID) }}</td>
-              <td>{{ getSubCategoryName(p.subCategoryID) }}</td>
-              <td>{{ getBrandName(p.brandID) }}</td>
-              <td>{{ getHSNCode(p.hsnid) }}</td>
-              <td>{{ getTaxName(p.taxID) }}</td>
-              <td>{{ getCessName(p.cessID) }}</td>
-              <td>{{ p.retailPrice }}</td>
-              <td>{{ p.mrp }}</td>
-              <td>{{ p.purchaseRate }}</td>
-              <td>{{ p.wholesalePrice }}</td>
-              <td>{{ p.saleRate }}</td>
-              <td>{{ p.discountAmount }}</td>
-              <td>{{ p.discountPercentage }}</td>
-              <td>{{ p.openingStock }}</td>
-              <td>{{ p.reorderLevel }}</td>
-              <td>{{ p.currentStock }}</td>
-              <td>{{ p.barcode }}</td>
-              <td>
-                <span
-                  [class]="p.isActive ? 'badge bg-success' : 'badge bg-danger'"
-                >
-                  {{ p.isActive ? "Active" : "Inactive" }}
-                </span>
-              </td>
-              <td class="text-center">
-                <button
-                  class="btn btn-sm btn-primary me-1"
-                  (click)="editProduct(p)"
-                >
-                  Edit
-                </button>
-                <button
-                  class="btn btn-sm btn-danger"
-                  (click)="deleteProduct(p)"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-            <tr *ngIf="products.length === 0">
-              <td colspan="23" class="text-center text-muted">
-                No products found.
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+<div class="container mt-4">
+  <h4>Product Master</h4>
+  <app-input-data-grid
+    [columns]="columns"
+    [data]="products"
+    (cellValueChanged)="onCellValueChanged($event)"
+    (rowAdded)="onRowAdded($event)"
+  >
+  </app-input-data-grid>
 </div>

@@ -1,38 +1,48 @@
-<nav class="sidebar d-flex flex-column vh-100 p-3 bg-white text-dark shadow-sm">
 
-  <ul class="nav nav-pills flex-column mb-auto">
-    <ng-container *ngFor="let item of navItems">
-      
-      <li *ngIf="!item.children" class="nav-item">
-        <a [routerLink]="item.route" routerLinkActive="active" class="nav-link text-dark">
-          <i *ngIf="item.icon" class="{{item.icon}} me-2"></i>
-          {{ item.label }}
-        </a>
-      </li>
 
-      <li *ngIf="item.children" class="nav-item">
-        <a class="nav-link text-dark d-flex justify-content-between align-items-center" 
-           (click)="item.expanded = !item.expanded" style="cursor:pointer">
-          <span>
-            <i *ngIf="item.icon" class="{{item.icon}} me-2"></i>
-            {{ item.label }}
-          </span>
-          <span>
-            <i class="bi" [ngClass]="{'bi-chevron-down': !item.expanded, 'bi-chevron-up': item.expanded}"></i>
-          </span>
-        </a>
+    <!-- Sidebar -->
+    <nav 
+      [class.collapsed]="!isSidebarOpen" 
+      class="sidebar d-flex flex-column shadow-sm">
 
-        <ul class="nav flex-column ms-3 mt-1" *ngIf="item.expanded">
-          <li *ngFor="let child of item.children" class="nav-item">
-            <a [routerLink]="child.route" routerLinkActive="active" class="nav-link text-dark">
-              <i *ngIf="child.icon" class="{{child.icon}} me-2"></i>
-              {{ child.label }}
+      <ul class="nav flex-column mb-auto">
+        <ng-container *ngFor="let item of navItems">
+
+          <!-- Single item -->
+          <li *ngIf="!item.children" class="nav-item">
+            <a [routerLink]="item.route" routerLinkActive="active" class="nav-link">
+              <i *ngIf="item.icon" class="{{ item.icon }}"></i>
+              <span class="label" *ngIf="isSidebarOpen">{{ item.label }}</span>
             </a>
           </li>
-        </ul>
-      </li>
-    </ng-container>
-  </ul>
 
-  <hr>
-</nav>
+          <!-- Parent item -->
+          <li *ngIf="item.children" class="nav-item">
+            <a class="nav-link d-flex justify-content-between align-items-center"
+               (click)="toggleItem(item)">
+              <span class="d-flex align-items-center">
+                <i *ngIf="item.icon" class="{{ item.icon }}"></i>
+                <span class="label" *ngIf="isSidebarOpen">{{ item.label }}</span>
+              </span>
+              <i class="bi" 
+                 [ngClass]="{
+                   'bi-chevron-down': !item.expanded, 
+                   'bi-chevron-up': item.expanded
+                 }"
+                 *ngIf="isSidebarOpen"></i>
+            </a>
+
+            <ul class="nav flex-column ms-3" *ngIf="item.expanded && isSidebarOpen">
+              <li *ngFor="let child of item.children">
+                <a [routerLink]="child.route" routerLinkActive="active" class="nav-link">
+                  <i *ngIf="child.icon" class="{{ child.icon }}"></i>
+                  <span>{{ child.label }}</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+        </ng-container>
+      </ul>
+    </nav>
+

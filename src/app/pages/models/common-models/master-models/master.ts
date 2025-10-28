@@ -79,7 +79,31 @@ export interface Product {
   productDescription: string;
   productImage: string;
   companyID: number;
+
+  color?: string;
+  size?: string;
+  weight?: number;
+  volume?: number;
+  material?: string;
+  finishType?: string;
+  shadeCode?: string;
+  capacity?: string;
+  modelNumber?: string;
+  expiryDate?: string;
+  secondaryUnitID?: number;
+  taxType?: string;
+  isGSTInclusive?: boolean;
+  taxableValue?: number;
+  cGSTRate?: number;
+  cGSTAmount?: number;
+  sGSTRate?: number;
+  sGSTAmount?: number;
+  iGSTRate?: number;
+  iGSTAmount?: number;
+  cESSRate?: number;
+  cESSAmount?: number;
 }
+
 
 export interface Supplier {
   supplierID: number;

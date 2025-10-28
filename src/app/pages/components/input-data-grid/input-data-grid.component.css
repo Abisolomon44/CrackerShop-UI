@@ -1,0 +1,130 @@
+/* 🧱 Container */
+.data-grid-container {
+  font-family: 'Poppins', sans-serif;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 12px;
+  overflow-x: auto;
+  margin-bottom: 20px; /* spacing if multiple tables */
+}
+
+/* 🧾 Table Base */
+.table {
+  width: 100%;
+  border-collapse: collapse; /* solid gridlines */
+  table-layout: auto; /* auto-width columns based on content */
+  border: 1px solid #dee2e6;
+}
+
+/* 🏷️ Table Header */
+th {
+  background: #f8f9fa;
+  color: #333;
+  font-weight: 600;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+  white-space: nowrap;
+  position: relative;
+  user-select: none;
+}
+
+th:last-child {
+  border-right: none;
+}
+
+th:hover {
+  background: #f1f3f5;
+}
+
+/* 📋 Table Cells */
+td {
+  padding: 8px 12px;
+  border-right: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: middle;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+td:last-child {
+  border-right: none;
+}
+
+/* ✏️ Input Fields */
+input.form-control-sm {
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  padding: 4px 8px;
+  width: 100%;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+input.form-control-sm:focus {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.1);
+  outline: none;
+}
+
+/* ↔️ Column Resize Handle */
+.resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* 📂 Dropdown */
+ul.dropdown-menu.show {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 180px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  z-index: 10;
+  margin-top: 2px;
+  list-style: none;
+  padding: 0;
+}
+
+ul.dropdown-menu.show li {
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+ul.dropdown-menu.show li:hover {
+  background-color: #f1f3f5;
+}
+
+/* ➕ Add Row Button */
+.data-grid-container .btn {
+  margin-top: 10px;
+  padding: 4px 12px;
+  border-radius: 5px;
+  font-size: 0.85rem;
+}
+
+/* 📏 Responsive Fine-tuning */
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.85rem;
+  }
+
+  th, td {
+    padding: 6px 8px;
+  }
+}

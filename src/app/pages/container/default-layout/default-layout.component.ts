@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DefaultHeaderComponent } from '../default-header/default-header.component';
 import { DefaultAsideComponent } from '../default-aside/default-aside.component';
@@ -18,5 +18,7 @@ import { DefaultFooterComponent } from '../default-footer/default-footer.compone
   styleUrls: ['./default-layout.component.css']
 })
 export class DefaultLayoutComponent {
+
+
 
 }
