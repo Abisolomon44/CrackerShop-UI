@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -6,8 +6,8 @@ import { MasterService } from '../../../services/master.service';
 import { ValidationService } from '../../../services/properties/validation.service';
 import { SweetAlertService } from '../../../services/properties/sweet-alert.service';
 import { CommonserviceService } from '../../../services/commonservice.service';
-
 import { InputDataGridComponent } from '../../components/input-data-grid/input-data-grid.component';
+
 import {
   Product,
   Category,
@@ -32,7 +32,9 @@ interface ApiResponse {
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'],
 })
-export class ProductComponent {
+export class ProductComponent implements OnInit, AfterViewInit {
+  @ViewChild(InputDataGridComponent) grid!: InputDataGridComponent;
+
   products: Product[] = [];
   newProducts: Product[] = [];
   product!: Product;
@@ -47,29 +49,31 @@ export class ProductComponent {
   taxes: Tax[] = [];
   cesses: Cess[] = [];
 
-  // Columns for InputDataGridComponent
+  // -----------------------------
+  // Grid Column Definitions
+  // -----------------------------
   columns = [
-    { field: 'productName', header: 'Product Name', type: 'text' },
-    { field: 'productCode', header: 'Product Code', type: 'text' },
-    { field: 'categoryID', header: 'Category', type: 'select' },
-    { field: 'subCategoryID', header: 'Sub Category', type: 'select' },
-    { field: 'brandID', header: 'Brand', type: 'select' },
-    { field: 'unitID', header: 'Unit', type: 'select' },
-    { field: 'hsnid', header: 'HSN Code', type: 'select' },
-    { field: 'taxID', header: 'Tax', type: 'select' },
-    { field: 'cessID', header: 'Cess', type: 'select' },
-    { field: 'purchaseRate', header: 'Purchase Rate', type: 'number' },
-    { field: 'retailPrice', header: 'Retail Price', type: 'number' },
-    { field: 'wholesalePrice', header: 'Wholesale Price', type: 'number' },
-    { field: 'saleRate', header: 'Sale Rate', type: 'number' },
+    { field: 'sno', header: 'S.NO', type: 'text', width: '60px' },
+    { field: 'barcode', header: 'BARCODE', type: 'text' },
+    { field: 'productCode', header: 'PRODUCT CODE', type: 'text' },
+    { field: 'productName', header: 'PRODUCT NAME', type: 'text' },
+    { field: 'categoryID', header: 'CATEGORY', type: 'select' },
+    { field: 'subCategoryID', header: 'SUB CATEGORY', type: 'select' },
+    { field: 'brandID', header: 'BRAND', type: 'select' },
+    { field: 'unitID', header: 'UNIT', type: 'select' },
+    { field: 'hsnid', header: 'HSN CODE', type: 'select' },
+    { field: 'taxID', header: 'TAX', type: 'select' },
+    { field: 'cessID', header: 'CESS', type: 'select' },
+    { field: 'purchaseRate', header: 'PURCHASE RATE', type: 'number' },
     { field: 'mrp', header: 'MRP', type: 'number' },
-    { field: 'discountAmount', header: 'Discount Amount', type: 'number' },
-    { field: 'discountPercentage', header: 'Discount %', type: 'number' },
-    { field: 'openingStock', header: 'Opening Stock', type: 'number' },
-    { field: 'reorderLevel', header: 'Reorder Level', type: 'number' },
-    { field: 'currentStock', header: 'Current Stock', type: 'number' },
-    { field: 'barcode', header: 'Barcode', type: 'text' },
-    { field: 'isService', header: 'Is Service', type: 'checkbox' },
+    { field: 'retailPrice', header: 'RETAIL PRICE', type: 'number' },
+    { field: 'wholesalePrice', header: 'WHOLESALE PRICE', type: 'number' },
+    { field: 'saleRate', header: 'SALE RATE', type: 'number' },
+    { field: 'discountPercentage', header: 'DISCOUNT %', type: 'number' },
+    { field: 'discountAmount', header: 'DISCOUNT AMOUNT', type: 'number' },
+    { field: 'openingStock', header: 'OPENING STOCK', type: 'number' },
+    { field: 'reorderLevel', header: 'REORDER LEVEL', type: 'number' },
+    { field: 'currentStock', header: 'CURRENT STOCK', type: 'number' },
   ];
 
   constructor(
@@ -79,28 +83,87 @@ export class ProductComponent {
     private readonly swall: SweetAlertService
   ) {}
 
-  ngOnInit() {
+  // -----------------------------
+  // Lifecycle
+  // -----------------------------
+  ngOnInit(): void {
     this.resetProduct();
-    this.loadProducts();
     this.loadDropdowns();
+    this.loadProducts();
   }
 
 
-  onCellValueChanged(event: any) {
+  ngAfterViewInit(): void {
+  // 🔹 Try repeatedly until grid is ready and DOM is rendered
+  const focusInterval = setInterval(() => {
+    if (this.grid && this.products.length > 0) {
+      this.focusGridCell();
+      clearInterval(focusInterval);
+    }
+  }, 150);
+}
+
+private focusGridCell(): void {
+  setTimeout(() => {
+    try {
+      // 👇 If no products, create one first
+      if (this.products.length === 0) {
+        this.products.push(this.newProduct());
+      }
+
+      // 👇 Wait a bit to ensure DOM ready
+      requestAnimationFrame(() => {
+        if (this.grid && typeof this.grid.focusCell === 'function') {
+          this.grid.focusCell(0, 3); // ✅ Focus first row, 4th column
+        }
+
+        // 👇 Fallback: focus input inside manually
+        const firstCell = document.querySelector(
+          'table tbody tr:first-child td:nth-child(4)'
+        ) as HTMLElement | null;
+        if (firstCell) firstCell.focus();
+      });
+    } catch (err) {
+      console.warn('Focus failed:', err);
+    }
+  }, 300);
+}
+
+private tryFocusGrid(): void {
+  setTimeout(() => {
+    if (this.grid) {
+      if (this.products.length === 0) {
+        // 👇 No products? Create one automatically
+        this.products.push(this.newProduct());
+      }
+      // 👇 Focus first row, column index 3 (4th column)
+      this.grid.focusCell(0, 3);
+    }
+  }, 400);
+}
+
+  // -----------------------------
+  // Grid Events
+  // -----------------------------
+  onCellValueChanged(event: any): void {
     const { row, col, value } = event;
     const field = this.columns[col].field;
+    this.products[row][field] = value;
   }
 
-  onRowAdded(event: any) {
-    const product = this.newProduct();
-    this.products.push(product);
+  onRowAdded(event: any): void {
+    const newRow = this.newProduct();
+    this.products.push(newRow);
+    this.tryFocusGrid();
   }
 
-  addRowManually() {
+  addRowManually(): void {
     this.onRowAdded(null);
   }
 
-
+  // -----------------------------
+  // Product Model
+  // -----------------------------
   private newProduct(): Product {
     const now = new Date().toISOString();
     return {
@@ -161,7 +224,13 @@ export class ProductComponent {
     };
   }
 
-  private focusProduct(targetId: string = 'productName') {
+  resetProduct(): void {
+    this.product = this.newProduct();
+    this.duplicateError = false;
+    this.focusProduct();
+  }
+
+  private focusProduct(targetId: string = 'productName'): void {
     setTimeout(() => {
       const el = document.getElementById(targetId) as HTMLInputElement | null;
       el?.focus();
@@ -169,18 +238,23 @@ export class ProductComponent {
     }, 0);
   }
 
-  resetProduct() {
-    this.product = this.newProduct();
-    this.duplicateError = false;
-    this.focusProduct();
-  }
-
   // -----------------------------
   // Load Data
   // -----------------------------
-  loadProducts() {
+  loadProducts(): void {
     this.masterService.getallProducts().subscribe({
-      next: (res) => (this.products = res ?? []),
+      next: (res) => {
+        this.products = res ?? [];
+
+        // 🔹 If no products found, create one empty row
+        if (this.products.length === 0) {
+          const blank = this.newProduct();
+          this.products.push(blank);
+        }
+
+        // 🔹 Always focus first cell
+        this.tryFocusGrid();
+      },
       error: () =>
         this.swall.error('Error', 'Failed to load products!', () =>
           this.focusProduct()
@@ -188,7 +262,7 @@ export class ProductComponent {
     });
   }
 
-  loadDropdowns() {
+  loadDropdowns(): void {
     this.commonService.getCompanies().subscribe((res) => (this.companies = res ?? []));
     this.masterService.getCategories().subscribe((res) => (this.categories = res ?? []));
     this.masterService.getSubCategories().subscribe((res) => (this.subCategories = res ?? []));
@@ -200,18 +274,19 @@ export class ProductComponent {
   }
 
   // -----------------------------
-  // Save / Update
+  // Save / Update / Delete
   // -----------------------------
-  saveOrUpdateProduct(p: Product) {
+  saveOrUpdateProduct(p: Product): void {
     const name = p.productName?.trim().toLowerCase() || '';
-    const duplicateError = this.products.some(
+    const duplicate = this.products.some(
       (prod) => prod.productID !== p.productID && prod.productName?.trim().toLowerCase() === name
     );
+
     if (!p.productName?.trim()) {
       this.swall.warning('Validation', 'Product Name is required!');
       return;
     }
-    if (duplicateError) {
+    if (duplicate) {
       this.swall.warning('Validation', 'Product Name already exists!');
       return;
     }
@@ -247,12 +322,7 @@ export class ProductComponent {
     });
   }
 
-  editProduct(p: Product) {
-    this.product = { ...p };
-    this.focusProduct();
-  }
-
-  deleteProduct(p: Product) {
+  deleteProduct(p: Product): void {
     this.swall
       .confirm(`Delete ${p.productName}?`, 'This will mark the product as inactive.')
       .then((result) => {
@@ -277,15 +347,16 @@ export class ProductComponent {
               );
             }
           },
-          error: () => this.swall.error('Error', 'Failed to delete product!', () =>
-            this.focusProduct()
-          ),
+          error: () =>
+            this.swall.error('Error', 'Failed to delete product!', () =>
+              this.focusProduct()
+            ),
         });
       });
   }
 
   // -----------------------------
-  // Dropdown Helpers
+  // Lookup Helpers
   // -----------------------------
   getCategoryName(categoryID: number) {
     return this.categories?.find((c) => c.categoryID === categoryID)?.categoryName || '';
@@ -307,5 +378,24 @@ export class ProductComponent {
   }
   getCompanyName(companyID: number) {
     return this.companies?.find((c) => c.companyID === companyID)?.companyName || '';
+  }
+
+  // -----------------------------
+  // Toolbar Actions
+  // -----------------------------
+  addNewProduct(): void {
+    this.onRowAdded(null);
+  }
+
+  editProduct(): void {
+    console.log('Edit Product');
+  }
+
+  reloadProducts(): void {
+    this.loadProducts();
+  }
+
+  exportToExcel(): void {
+    console.log('Export to Excel');
   }
 }

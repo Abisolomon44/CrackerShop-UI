@@ -102,6 +102,7 @@ export interface Product {
   iGSTAmount?: number;
   cESSRate?: number;
   cESSAmount?: number;
+  [key: string]: any;
 }
 
 

@@ -1,41 +1,37 @@
-<div class="data-grid-container mt-3">
+<div class="data-grid-container">
   <table class="table">
     <thead>
       <tr>
         <th *ngFor="let col of columns; let i = index">
           {{ col.header }}
-          <span class="resize-handle" (mousedown)="startResize($event, i)"></span>
+          <span
+            *ngIf="allowUserToResizeColumns"
+            class="resize-handle"
+            (mousedown)="startResize($event, i)"
+          ></span>
         </th>
       </tr>
     </thead>
 
     <tbody>
       <tr *ngFor="let row of data; let r = index">
-        <td *ngFor="let col of columns; let c = index">
-          <div class="position-relative">
-            <input
-              #gridInput
-              class="form-control form-control-sm"
-              [(ngModel)]="row[col.field]"
-              (focus)="beginEdit(r, c)"
-              (blur)="endEdit(r, c, row[col.field])"
-              (keydown)="handleKeyDown($event, r, c)"
-              (keypress)="handleKeyPress($event, r, c)"
-              [class.focused]="focusedCell.row === r && focusedCell.col === c"
-              autocomplete="off" />
-
-            <ul *ngIf="dropdownOpen.row === r && dropdownOpen.col === c"
-                class="dropdown-menu show">
-              <li *ngFor="let option of getFilteredOptions(row[col.field], col)"
-                  (mousedown)="selectOption(r, c, option)">
-                {{ option }}
-              </li>
-            </ul>
-          </div>
+        <td
+          *ngFor="let col of columns; let c = index"
+          [class.focused]="focusedCell.row === r && focusedCell.col === c"
+          (click)="selectionMode === 'FullRowSelect' ? focusCell(r, 0) : focusCell(r, c)"
+        >
+          <input
+            #gridInput
+            type="text"
+            class="cell-input"
+            [(ngModel)]="row[col.field]"
+            (focus)="focusCell(r, c)"
+            (keydown)="handleKeyDown($event, r, c)"
+            (keypress)="handleKeyPress($event, r, c)"
+            autocomplete="off"
+          />
         </td>
       </tr>
     </tbody>
   </table>
-
-  <button class="btn btn-primary btn-sm" (click)="addRow()">Add Row</button>
 </div>

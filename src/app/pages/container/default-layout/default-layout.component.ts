@@ -11,7 +11,6 @@ import { DefaultFooterComponent } from '../default-footer/default-footer.compone
     CommonModule,
     RouterModule,
     DefaultHeaderComponent,
-    DefaultAsideComponent,
     DefaultFooterComponent
   ],
   templateUrl: './default-layout.component.html',

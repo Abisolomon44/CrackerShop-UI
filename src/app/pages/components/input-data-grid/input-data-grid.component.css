@@ -1,130 +1,90 @@
-/* 🧱 Container */
+/* 🧱 Grid Container */
 .data-grid-container {
   font-family: 'Poppins', sans-serif;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  padding: 12px;
-  overflow-x: auto;
-  margin-bottom: 20px; /* spacing if multiple tables */
+  padding: 8px;
+  width: 100%;
+  height: calc(100vh - 160px);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
-/* 🧾 Table Base */
+/* 🧾 Table Styling */
 .table {
   width: 100%;
-  border-collapse: collapse; /* solid gridlines */
-  table-layout: auto; /* auto-width columns based on content */
-  border: 1px solid #dee2e6;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: auto;
+  flex: 1;
+  border: 1px solid #dcdcdc;
 }
 
-/* 🏷️ Table Header */
+/* 🧩 Header */
 th {
-  background: #f8f9fa;
-  color: #333;
-  font-weight: 600;
+  background: #f7f7f7;
   text-align: left;
-  padding: 10px 12px;
-  border-bottom: 2px solid #dee2e6;
-  border-right: 1px solid #dee2e6;
+  padding: 6px 8px;
+  font-weight: 600;
+  border: 1px solid #dcdcdc;
   white-space: nowrap;
-  position: relative;
-  user-select: none;
-}
-
-th:last-child {
-  border-right: none;
-}
-
-th:hover {
-  background: #f1f3f5;
-}
-
-/* 📋 Table Cells */
-td {
-  padding: 8px 12px;
-  border-right: 1px solid #dee2e6;
-  border-bottom: 1px solid #dee2e6;
-  vertical-align: middle;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-td:last-child {
-  border-right: none;
-}
-
-/* ✏️ Input Fields */
-input.form-control-sm {
-  border: 1px solid #ced4da;
-  border-radius: 5px;
-  padding: 4px 8px;
-  width: 100%;
-  font-size: 0.9rem;
-  transition: all 0.2s;
-}
-
-input.form-control-sm:focus {
-  border-color: #007bff;
-  background-color: #f0f8ff;
-  box-shadow: 0 0 0 2px rgba(0,123,255,0.1);
-  outline: none;
-}
-
-/* ↔️ Column Resize Handle */
-.resize-handle {
-  position: absolute;
-  right: 0;
+  height: 30px;
+  position: sticky;
   top: 0;
-  width: 6px;
-  height: 100%;
-  cursor: col-resize;
-  user-select: none;
+  z-index: 2;
 }
 
-/* 📂 Dropdown */
-ul.dropdown-menu.show {
-  position: absolute;
-  top: 100%;
-  left: 0;
+/* 🧠 Table Cells */
+td {
+  border: 1px solid #e0e0e0;
+  padding: 4px 6px;
+  vertical-align: top; /* ✅ top aligns multiline text */
+  transition: background 0.15s ease-in-out;
+  text-overflow: ellipsis;
+  white-space: normal; /* ✅ allow text to wrap */
+  word-break: break-word; /* ✅ break long text gracefully */
+  min-height: 24px; /* default compact height */
+  line-height: 1.4;
+}
+
+/* ✨ Input Cell */
+.cell-input {
   width: 100%;
-  max-height: 180px;
-  overflow-y: auto;
-  background: #fff;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-  z-index: 10;
-  margin-top: 2px;
-  list-style: none;
-  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 2px 4px;
+  text-align: left;
+  line-height: 1.4;
+  resize: none; /* ✅ prevents manual resize, but auto expands */
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-word;
+  caret-color: transparent;
 }
 
-ul.dropdown-menu.show li {
-  padding: 6px 10px;
-  cursor: pointer;
-  transition: background-color 0.2s;
+/* 🔷 Focused Cell */
+td.focused {
+  background-color: #e3f2fd;
+  outline: 1px solid #2196f3;
 }
 
-ul.dropdown-menu.show li:hover {
-  background-color: #f1f3f5;
+/* 🖱️ Hover */
+td:hover {
+  background-color: #f9f9f9;
 }
 
-/* ➕ Add Row Button */
-.data-grid-container .btn {
-  margin-top: 10px;
-  padding: 4px 12px;
-  border-radius: 5px;
-  font-size: 0.85rem;
+/* 🪟 Smooth Scrolling */
+.data-grid-container::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
 }
 
-/* 📏 Responsive Fine-tuning */
-@media (max-width: 768px) {
-  .table {
-    font-size: 0.85rem;
-  }
-
-  th, td {
-    padding: 6px 8px;
-  }
+.data-grid-container::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
 }
