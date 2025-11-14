@@ -75,8 +75,18 @@ throw new Error('Method not implemented.');
     );
   }
 
-
-
+  /*
+  private markSelectedModules() {
+    if (!this.permissions.length) return;
+    this.modules.forEach((m) => {
+      const permission = this.permissions.find(
+        (p) => +p.moduleID === m.moduleID
+      );
+      this.selectedModulesMap[m.moduleID] = !!permission;
+      this.permissionNameMap[m.moduleID] = permission?.permissionName || '';
+    });
+  }
+*/  
   savePermission(permission: UserPermission) {
     if (!permission.permissionName || !permission.moduleID) {
       alert('Permission Name is required for each module.');

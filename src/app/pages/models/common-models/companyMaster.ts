@@ -67,8 +67,3 @@ export interface Role {
   updatedSystemName: string;
   updatedAt: string;
 }
-
-export interface ApiResponse {
-  success: boolean;
-  message?: string;
-}

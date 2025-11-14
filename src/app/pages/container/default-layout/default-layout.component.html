@@ -1,11 +1,18 @@
 <div class="layout-container">
-  <!-- 🔹 Fixed header with nav -->
+  <!-- Header -->
   <app-default-header></app-default-header>
 
-  <main class="layout-content">
-    <router-outlet></router-outlet>
-  </main>
+  <!-- Main area: sidebar + content -->
+  <div class="layout-main">
+    <!-- Sidebar -->
+    <app-default-aside></app-default-aside>
 
-  <!-- 🔹 Optional footer -->
+    <!-- Content area -->
+    <div class="layout-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+  <!-- Footer -->
   <app-default-footer></app-default-footer>
 </div>
