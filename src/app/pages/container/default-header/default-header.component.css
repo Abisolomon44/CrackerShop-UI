@@ -1,0 +1,90 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fcfcfc;
+  color: #018852;
+  padding: 0.75rem 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.user-icon {
+  width: 36px;
+  height: 36px;
+  background-color: #f9f7f433;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #02771a;
+}
+
+.user-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  font-weight: 500;
+}
+
+.role {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.dropdown-icon {
+  width: 12px;
+  height: 12px;
+  fill: #fff;
+  margin-left: 0.3rem;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  color: #065c6c;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0.5rem 0 0 0;
+  min-width: 150px;
+  z-index: 100;
+}
+
+.dropdown li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown li:hover {
+  background-color: #e0f2f1;
+}
